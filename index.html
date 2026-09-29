@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZEREK BALA - Мектепалды Даярлық Интерактивті Платформасы</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Tailwind CSS Framework CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            bounceSlow: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.8', transform: 'scale(1)' },
+              '50%': { opacity: '1', transform: 'scale(1.03)' },
+            },
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(-4deg)' },
+              '50%': { transform: 'rotate(4deg)' },
+            },
+            springBounce: {
+              '0%': { transform: 'scale(0.3)', opacity: '0' },
+              '50%': { transform: 'scale(1.15)' },
+              '70%': { transform: 'scale(0.95)' },
+              '100%': { transform: 'scale(1)', opacity: '1' }
+            },
+            magicGlow: {
+              '0%, 100%': { boxShadow: '0 0 15px rgba(236, 72, 153, 0.6)', transform: 'scale(1)' },
+              '50%': { boxShadow: '0 0 35px rgba(168, 85, 247, 0.9)', transform: 'scale(1.05)' }
+            }
+          },
+          animation: {
+            float: 'float 4s ease-in-out infinite',
+            bounceSlow: 'bounceSlow 2.5s ease-in-out infinite',
+            pulseGlow: 'pulseGlow 3s ease-in-out infinite',
+            wiggle: 'wiggle 0.5s ease-in-out infinite',
+            springBounce: 'springBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+            magicGlow: 'magicGlow 2s ease-in-out infinite'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #e2e8f0;
+      border-radius: 10px;
+      height: 6px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.1s;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body class="relative text-slate-800 pb-20">
+
+  <!-- Floating Atmosphere Background Elements -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
+    <div class="absolute top-6 left-6 text-yellow-400 text-3xl sm:text-5xl animate-float"><i class="fa-solid fa-cloud"></i></div>
+    <div class="absolute top-36 left-1/4 text-pink-300 text-3xl sm:text-4xl animate-bounceSlow"><i class="fa-solid fa-star"></i></div>
+    <div class="absolute top-20 right-1/3 text-blue-300 text-4xl sm:text-6xl animate-float" style="animation-delay: 1s;"><i class="fa-solid fa-cloud"></i></div>
+    <div class="absolute bottom-20 left-8 text-purple-300 text-3xl sm:text-5xl animate-bounceSlow" style="animation-delay: 1.5s;"><i class="fa-solid fa-music"></i></div>
+    <div class="absolute bottom-10 right-10 text-green-300 text-4xl sm:text-6xl animate-float" style="animation-delay: 0.5s;"><i class="fa-solid fa-sun"></i></div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="relative z-10 w-full max-w-7xl mx-auto px-4 pt-4 sm:pt-6 pb-2">
+    <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+      
+      <!-- Stars Counter (Left) -->
+      <div class="bg-white/80 backdrop-blur-md px-4 py-2 sm:px-5 sm:py-2.5 rounded-full shadow-lg border-2 border-yellow-300 flex items-center gap-2.5 sm:gap-3 animate-pulseGlow">
+        <div class="bg-yellow-400 text-white p-1.5 sm:p-2 rounded-full w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-base sm:text-lg shadow-md">
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <div>
+          <span class="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider block">Жұлдызшалар</span>
+          <span id="star-count" class="text-lg sm:text-xl font-extrabold text-yellow-600">12</span>
+        </div>
+      </div>
+
+      <!-- Right Header Box: Owner Name + Audio Player + Mini Tracklist -->
+      <div class="w-full sm:w-80 ml-auto bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl shadow-xl border-4 border-amber-200 space-y-3">
+        
+        <!-- Platform Author -->
+        <div class="text-right border-b border-amber-100 pb-2">
+          <span class="text-[9px] sm:text-[10px] font-bold text-amber-500 uppercase tracking-widest block">Платформа авторы</span>
+          <h3 class="text-xs sm:text-sm font-black text-slate-700 flex items-center justify-end gap-1.5">
+            <i class="fa-solid fa-award text-yellow-500 text-xs"></i>
+            Отарова Әсел Сатыбалдықызы
+          </h3>
+        </div>
+
+        <!-- Audio Player Widget -->
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-3 border-2 border-orange-200 space-y-2">
+          
+          <div class="flex justify-between items-center">
+            <div class="truncate mr-2">
+              <span id="player-track-title" class="text-[11px] sm:text-xs font-extrabold text-slate-800 block truncate">
+                🎶 Балбырауын күйі
+              </span>
+              <span id="player-track-status" class="text-[9px] text-orange-600 font-semibold block">Тоқтатылды</span>
+            </div>
+
+            <div id="equalizer-bars" class="flex items-end gap-0.5 h-4 opacity-40 shrink-0">
+              <span class="w-1 bg-orange-400 rounded-full h-2"></span>
+              <span class="w-1 bg-amber-400 rounded-full h-4"></span>
+              <span class="w-1 bg-red-400 rounded-full h-1"></span>
+              <span class="w-1 bg-yellow-400 rounded-full h-3"></span>
+            </div>
+          </div>
+
+          <!-- Seekbar -->
+          <div class="flex items-center gap-1.5">
+            <span id="current-time" class="text-[9px] font-bold text-gray-500 min-w-[24px]">0:00</span>
+            <input type="range" id="seek-bar" value="0" max="100" class="w-full cursor-pointer accent-orange-500 h-1" />
+            <span id="duration-time" class="text-[9px] font-bold text-gray-500 min-w-[24px]">0:00</span>
+          </div>
+
+          <!-- Player Controls -->
+          <div class="flex items-center justify-between pt-0.5">
+            <div class="flex items-center gap-1.5">
+              <button id="prev-btn" class="w-7 h-7 rounded-full bg-white shadow hover:bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] active:scale-90 transition">
+                <i class="fa-solid fa-backward-step"></i>
+              </button>
+              
+              <button id="play-pause-btn" class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-400 to-pink-500 shadow text-white flex items-center justify-center text-xs hover:scale-105 active:scale-95 transition">
+                <i id="play-icon" class="fa-solid fa-play ml-0.5"></i>
+              </button>
+
+              <button id="next-btn" class="w-7 h-7 rounded-full bg-white shadow hover:bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] active:scale-90 transition">
+                <i class="fa-solid fa-forward-step"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1 bg-white/90 px-2 py-0.5 rounded-full shadow-inner border border-orange-100">
+              <i id="volume-icon" class="fa-solid fa-volume-high text-[10px] text-orange-500 cursor-pointer"></i>
+              <input type="range" id="volume-bar" value="80" max="100" class="w-10 h-1 accent-orange-500 cursor-pointer" />
+            </div>
+          </div>
+
+          <audio id="main-audio-player" src="audio/music1.mp3" preload="metadata"></audio>
+        </div>
+
+        <!-- Mini Playlist -->
+        <div class="space-y-1.5 pt-1 border-t border-amber-100">
+          <div class="flex items-center justify-between px-1 mb-1">
+            <span class="text-[10px] font-extrabold text-amber-700 uppercase tracking-wide">Күйлер тізімі</span>
+            <span class="text-[9px] text-gray-400 font-bold">3 күй</span>
+          </div>
+
+          <div data-src="audio/music1.mp3" data-title="Балбырауын күйі" class="music-card bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 p-2 rounded-xl border border-pink-200 flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 shadow-sm active:scale-98">
+            <div class="flex items-center gap-2 truncate mr-1">
+              <div class="w-6 h-6 rounded-lg bg-pink-400 text-white flex items-center justify-center font-black text-[10px] shadow shrink-0">1</div>
+              <div class="truncate">
+                <h4 class="font-bold text-slate-800 text-[11px] truncate">Балбырауын күйі</h4>
+                <p class="text-[9px] text-gray-500 truncate">Құрманғазы</p>
+              </div>
+            </div>
+            <button class="w-6 h-6 rounded-full bg-white text-pink-500 shadow flex items-center justify-center hover:bg-pink-500 hover:text-white transition shrink-0">
+              <i class="fa-solid fa-play text-[9px]"></i>
+            </button>
+          </div>
+
+          <div data-src="audio/music2.mp3" data-title="Адай күйі" class="music-card bg-gradient-to-r from-sky-50 to-blue-50 hover:from-sky-100 hover:to-blue-100 p-2 rounded-xl border border-sky-200 flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 shadow-sm active:scale-98">
+            <div class="flex items-center gap-2 truncate mr-1">
+              <div class="w-6 h-6 rounded-lg bg-sky-400 text-white flex items-center justify-center font-black text-[10px] shadow shrink-0">2</div>
+              <div class="truncate">
+                <h4 class="font-bold text-slate-800 text-[11px] truncate">Адай күйі</h4>
+                <p class="text-[9px] text-gray-500 truncate">Жігерлі домбыра</p>
+              </div>
+            </div>
+            <button class="w-6 h-6 rounded-full bg-white text-sky-500 shadow flex items-center justify-center hover:bg-sky-500 hover:text-white transition shrink-0">
+              <i class="fa-solid fa-play text-[9px]"></i>
+            </button>
+          </div>
+
+          <div data-src="audio/music3.mp3" data-title="Көңілашар күйі" class="music-card bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 p-2 rounded-xl border border-emerald-200 flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 shadow-sm active:scale-98">
+            <div class="flex items-center gap-2 truncate mr-1">
+              <div class="w-6 h-6 rounded-lg bg-emerald-400 text-white flex items-center justify-center font-black text-[10px] shadow shrink-0">3</div>
+              <div class="truncate">
+                <h4 class="font-bold text-slate-800 text-[11px] truncate">Көңілашар күйі</h4>
+                <p class="text-[9px] text-gray-500 truncate">Шаттық күйі</p>
+              </div>
+            </div>
+            <button class="w-6 h-6 rounded-full bg-white text-emerald-500 shadow flex items-center justify-center hover:bg-emerald-500 hover:text-white transition shrink-0">
+              <i class="fa-solid fa-play text-[9px]"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Section with logo.png integration -->
+  <section class="relative z-10 text-center my-8 sm:my-12 px-4 max-w-5xl mx-auto">
+    <div class="inline-block relative max-w-full">
+      <div class="absolute -inset-4 bg-white/70 backdrop-blur-md rounded-full filter blur-md -z-10 animate-pulseGlow"></div>
+      
+      <!-- Big Logo Block (logo.png) -->
+      <div class="flex justify-center items-center mb-6 sm:mb-8">
+        <div class="relative group">
+          <div class="absolute -inset-4 bg-gradient-to-r from-pink-400 via-amber-300 to-sky-400 rounded-full blur-xl opacity-80 group-hover:opacity-100 transition duration-500 animate-pulse"></div>
+          <img 
+            id="main-platform-logo" 
+            src="logo.png" 
+            alt="ZEREK BALA Логотипі" 
+            onerror="this.onerror=null; this.src='image/logo.png'; this.onerror=function(){ this.parentElement.innerHTML='<div class=\'w-100 h-100 sm:w-64 sm:h-64 bg-white/90 rounded-full shadow-2xl border-4 border-amber-300 flex flex-col items-center justify-center p-4 text-center mx-auto animate-bounceSlow\'><span class=\'text-5xl sm:text-6xl\'>🌟</span><span class=\'text-xs sm:text-sm font-black text-amber-600 mt-2 uppercase tracking-tight\'>logo.png</span></div>'; };" 
+            class="relative w-100 h-100 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 object-contain mx-auto drop-shadow-2xl transition transform group-hover:scale-105"
+          />
+        </div>
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-sky-400 drop-shadow-2xl animate-float select-none">
+        ZEREK BALA ойна, үйрен, дамы!
+      </h1>
+      
+      <div class="mt-3 sm:mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-teal-500 text-white px-5 py-2 sm:px-8 sm:py-2.5 rounded-full shadow-lg text-xs sm:text-lg font-extrabold uppercase tracking-wider">
+        <i class="fa-solid fa-shapes"></i> Ойын арқылы дамытуға арналған интерактивті платформа
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Areas -->
+  <main class="relative z-10 max-w-5xl mx-auto px-4 space-y-12">
+    
+    <!-- Video Lessons Section -->
+    <section class="bg-white/90 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-sky-200 space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-sky-100 pb-3">
+        <h2 class="text-xl sm:text-3xl font-black text-sky-600 flex items-center gap-2.5">
+          <i class="fa-solid fa-circle-play text-red-500 text-2xl sm:text-3xl"></i>
+          Платформа туралы
+        </h2>
+        <span class="bg-sky-100 text-sky-700 text-xs sm:text-sm font-bold px-3 py-1 rounded-full">
+          Ашылу сабағы
+        </span>
+      </div>
+
+      <!-- Video Player Frame -->
+      <div class="relative bg-slate-900 rounded-3xl overflow-hidden border-4 sm:border-8 border-amber-300 shadow-2xl">
+        <video id="intro-video" class="w-full aspect-video object-cover" controls poster="https://placehold.co/1280x720/38bdf8/ffffff?text=ZEREK+BALA">
+          <source src="video/ashylu.mp4" type="video/mp4" />
+          Сіздің браузеріңіз видеоны қолдамайды.
+        </video>
+      </div>
+
+      <!-- Video Controls & Reward -->
+      <div class="p-4 bg-amber-50 rounded-2xl border-2 border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="font-extrabold text-slate-800 text-sm sm:text-lg">"Zerek Bala" платформасының салтанатты ашылуы</h3>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">Видеоны толық тамашалап, біліміңді шыңда!</p>
+        </div>
+        <button id="video-reward-btn" class="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-900 font-extrabold text-xs sm:text-sm px-6 py-3 rounded-2xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2 shrink-0">
+          <i class="fa-solid fa-gift text-lg"></i> Сыйлық алу (+5 ⭐)
+        </button>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!--          1. КОММУНИКАТИВТІК ДАҒДЫ ИНТЕРАКТИВТІ ОЙЫНДАР           -->
+    <!-- ================================================================= -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-purple-300 space-y-6">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-2 border-b-2 border-purple-100 pb-4">
+        <span class="inline-block bg-purple-100 text-purple-700 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          🎮 Дамытушы интерактивті ойындар (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 tracking-tight">
+          Сөйлеймін және түсінемін
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-purple-800 bg-purple-50 px-4 py-2 rounded-2xl border border-purple-200 inline-block">
+          КОММУНИКАТИВТІК ДАҒДЫ
+        </p>
+      </div>
+
+      <!-- Level Step Navigation Badges -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <button onclick="switchGameTab(1)" id="game-tab-1" class="py-2.5 px-2 rounded-2xl bg-purple-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-purple-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>1-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Фонематика</span>
+        </button>
+        <button onclick="switchGameTab(2)" id="game-tab-2" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>2-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Сөздік қор</span>
+        </button>
+        <button onclick="switchGameTab(3)" id="game-tab-3" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>3-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Ертегіші</span>
+        </button>
+      </div>
+
+      <!-- Main Game Container -->
+      <div id="game-container" class="bg-gradient-to-b from-slate-50 to-purple-50/50 rounded-3xl p-4 sm:p-8 border-2 border-purple-100 relative min-h-[420px] flex flex-col justify-center">
+
+        <!-- 1-ОЙЫН: «Дыбыстар мен сөздер сиқыры» -->
+        <div id="game-1-panel" class="game-panel space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-purple-600 uppercase">1-Ойын • Дыбыстың орнын тап</span>
+            <h3 class="text-xl sm:text-3xl font-black text-purple-900">«Дыбыстар мен сөздер сиқыры»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Сөзді тыңдап, Қ дыбысы сөздің қай жерінде екенін анықта!
+            </p>
+          </div>
+
+          <div class="pt-2">
+            <button onclick="playGameAudio('audio/word_qalam.mp3', 'audio/sound_b_p.mp3')" class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white font-black text-base sm:text-xl px-8 py-4 rounded-3xl shadow-xl transition transform active:scale-95 inline-flex items-center gap-3">
+              <i class="fa-solid fa-volume-high text-2xl animate-bounce"></i> Дыбысты тыңдау 
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4">
+            <button onclick="checkGame1Answer('start')" class="bg-white p-4 rounded-3xl border-4 border-purple-200 hover:border-purple-500 shadow-md transition transform hover:-translate-y-1 active:scale-95 flex flex-col items-center gap-3 group">
+              <img src="image/box_start.png" onerror="this.src='https://placehold.co/200x180/e0e7ff/3730a3?text=📦+Сөз+Басында'" alt="Басы" class="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-2xl group-hover:scale-105 transition">
+              <span class="font-extrabold text-sm sm:text-base text-purple-900">1. Сөз басында</span>
+            </button>
+
+            <button onclick="checkGame1Answer('mid')" class="bg-white p-4 rounded-3xl border-4 border-purple-200 hover:border-purple-500 shadow-md transition transform hover:-translate-y-1 active:scale-95 flex flex-col items-center gap-3 group">
+              <img src="image/box_mid.png" onerror="this.src='https://placehold.co/200x180/fef3c7/b45309?text=📦+Сөз+Ортасында'" alt="Ортасы" class="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-2xl group-hover:scale-105 transition">
+              <span class="font-extrabold text-sm sm:text-base text-purple-900">2. Сөз ортасында</span>
+            </button>
+
+            <button onclick="checkGame1Answer('end')" class="bg-white p-4 rounded-3xl border-4 border-purple-200 hover:border-purple-500 shadow-md transition transform hover:-translate-y-1 active:scale-95 flex flex-col items-center gap-3 group">
+              <img src="image/box_end.png" onerror="this.src='https://placehold.co/200x180/fce7f3/9d174d?text=📦+Сөз+Соңында'" alt="Соңы" class="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-2xl group-hover:scale-105 transition">
+              <span class="font-extrabold text-sm sm:text-base text-purple-900">3. Сөз соңында</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2-ОЙЫН: «Сөз шебері және тапқырлар дүкені» -->
+        <div id="game-2-panel" class="game-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-purple-600 uppercase">2-Ойын • Грамматика & Жұмбақ</span>
+            <h3 class="text-xl sm:text-3xl font-black text-purple-900">«Сөз шебері және тапқырлар дүкені»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Аудионы тыңдап, сөздерді дұрыс тізбекпен құрастырыңыз!
+            </p>
+          </div>
+
+          <div>
+            <button onclick="playGameAudio('audio/riddle1.mp3', 'audio/qaz_alma.mp3')" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-xs sm:text-base px-6 py-3 rounded-full shadow-lg transition transform active:scale-95 inline-flex items-center gap-2">
+              <i class="fa-solid fa-circle-question text-lg"></i> Аудионы тыңдау
+            </button>
+          </div>
+
+          <div class="bg-amber-100/70 p-4 rounded-3xl border-2 border-amber-200 max-w-2xl mx-auto flex items-center justify-around gap-4">
+            <div class="text-center">
+              <img src="image/shelf_items.png" onerror="this.src='https://placehold.co/120x120/fef3c7/d97706?text=🍎+Дүкен+Сөресі'" class="w-20 h-20 sm:w-24 sm:h-24 object-contain mx-auto">
+              <span class="text-[10px] font-bold text-amber-800">Дүкен сөресі</span>
+            </div>
+            <i class="fa-solid fa-arrow-right text-amber-400 text-xl sm:text-2xl"></i>
+            <div class="text-center">
+              <img id="shop-bag-img" src="image/game2_item1.png" onerror="this.src='https://placehold.co/120x120/dcfce7/15803d?text=🛍️+Сөмке'" class="w-20 h-20 sm:w-24 sm:h-24 object-contain mx-auto transition transform">
+              <span class="text-[10px] font-bold text-emerald-800">Себет / Сөмке</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-3 my-2">
+            <div id="g2-slot-0" class="w-20 h-12 sm:w-28 sm:h-14 bg-white border-2 border-dashed border-purple-300 rounded-2xl flex items-center justify-center font-black text-xs sm:text-sm text-purple-600 shadow-inner">1-сөз</div>
+            <div id="g2-slot-1" class="w-20 h-12 sm:w-28 sm:h-14 bg-white border-2 border-dashed border-purple-300 rounded-2xl flex items-center justify-center font-black text-xs sm:text-sm text-purple-600 shadow-inner">2-сөз</div>
+            <div id="g2-slot-2" class="w-20 h-12 sm:w-28 sm:h-14 bg-white border-2 border-dashed border-purple-300 rounded-2xl flex items-center justify-center font-black text-xs sm:text-sm text-purple-600 shadow-inner">3-сөз</div>
+            <div id="g2-slot-3" class="w-20 h-12 sm:w-28 sm:h-14 bg-white border-2 border-dashed border-purple-300 rounded-2xl flex items-center justify-center font-black text-xs sm:text-sm text-purple-600 shadow-inner">4-сөз</div>
+          </div>
+
+          <div class="flex flex-wrap justify-center items-center gap-3 pt-2">
+            <button id="g2-card-ush" onclick="selectGame2Word('Үш', 'g2-card-ush')" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold text-sm sm:text-base px-5 py-3 rounded-2xl shadow-md transition transform active:scale-90 border-b-4 border-amber-600">
+              [Үш]
+            </button>
+            <button id="g2-card-ulken" onclick="selectGame2Word('үлкен', 'g2-card-ulken')" class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-sm sm:text-base px-5 py-3 rounded-2xl shadow-md transition transform active:scale-90 border-b-4 border-sky-600">
+              [үлкен]
+            </button>
+            <button id="g2-card-qyzyl" onclick="selectGame2Word('қызыл', 'g2-card-qyzyl')" class="bg-rose-400 hover:bg-rose-500 text-white font-extrabold text-sm sm:text-base px-5 py-3 rounded-2xl shadow-md transition transform active:scale-90 border-b-4 border-rose-600">
+              [қызыл]
+            </button>
+            <button id="g2-card-alma" onclick="selectGame2Word('алма', 'g2-card-alma')" class="bg-emerald-400 hover:bg-emerald-500 text-white font-extrabold text-sm sm:text-base px-5 py-3 rounded-2xl shadow-md transition transform active:scale-90 border-b-4 border-emerald-600">
+              [алма]
+            </button>
+          </div>
+
+          <div>
+            <button onclick="resetGame2()" class="text-xs font-bold text-gray-500 hover:text-purple-600 underline">
+              <i class="fa-solid fa-rotate-left"></i> Сөздерді тазалау
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-ОЙЫН: «Ертегіші бала» -->
+        <div id="game-3-panel" class="game-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-purple-600 uppercase">3-Ойын • Байланыстырып сөйлеу</span>
+            <h3 class="text-xl sm:text-3xl font-black text-purple-900">«Ертегіші қыз»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Кейіпкердің сұрағын тыңдап, оқиғаның жалғасын дұрыс таңдаңыз!
+            </p>
+          </div>
+
+          <div>
+            <button onclick="playGameAudio('audio/story_start.mp3', 'audio/dialog_q.mp3')" class="bg-indigo-500 hover:bg-indigo-600 text-white font-extrabold text-xs sm:text-sm px-6 py-3 rounded-full shadow transition transform active:scale-95 inline-flex items-center gap-2">
+              <i class="fa-solid fa-comments text-base"></i> Әңгімені тыңдау
+            </button>
+          </div>
+
+          <div class="flex justify-center items-center gap-6 sm:gap-12 my-2">
+            <div class="text-center space-y-1">
+              <img id="hero-img" src="image/hero_talk.png" onerror="this.src='https://placehold.co/120x120/c084fc/ffffff?text=🦊+Кейіпкер'" alt="Hero" class="w-20 h-20 sm:w-28 sm:h-28 object-contain mx-auto drop-shadow-md">
+              <span class="text-[10px] sm:text-xs font-bold text-purple-700 block">Ақылды Түлкіше</span>
+            </div>
+
+            <div id="story-bubble" class="bg-white p-3.5 rounded-2xl shadow-md border-2 border-purple-200 max-w-xs text-left text-xs font-bold text-slate-700">
+              «Күзде бақта қызыл алмалар пісті. Содан кейін достар не істеді?...»
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
+            <button onclick="checkGame3Answer(false)" class="bg-white p-3 rounded-2xl border-2 border-purple-200 hover:border-purple-400 shadow-sm transition transform active:scale-95 flex items-center gap-3">
+              <img src="image/game1_box.png" onerror="this.src='https://placehold.co/60x60/fee2e2/991b1b?text=1'" class="w-12 h-12 object-contain rounded-lg shrink-0">
+              <span class="font-bold text-xs text-slate-700 text-left">1. Достар ұйықтауға кетті.</span>
+            </button>
+
+            <button onclick="checkGame3Answer(true)" class="bg-white p-3 rounded-2xl border-2 border-purple-200 hover:border-purple-400 shadow-sm transition transform active:scale-95 flex items-center gap-3">
+              <img src="image/game2_item1.png" onerror="this.src='https://placehold.co/60x60/dcfce7/166534?text=Дұрыс'" class="w-12 h-12 object-contain rounded-lg shrink-0">
+              <span class="font-bold text-xs text-slate-700 text-left">2. Барлығы жиналып, дәмді алма жинады!</span>
+            </button>
+
+            <button onclick="checkGame3Answer(false)" class="bg-white p-3 rounded-2xl border-2 border-purple-200 hover:border-purple-400 shadow-sm transition transform active:scale-95 flex items-center gap-3">
+              <img src="image/hero.jpg" onerror="this.src='https://placehold.co/60x60/fef3c7/92400e?text=3'" class="w-12 h-12 object-contain rounded-lg shrink-0">
+              <span class="font-bold text-xs text-slate-700 text-left">3. Қасқыр келіп доп ойнады.</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Completion Panel -->
+        <div id="game-complete" class="game-panel hidden space-y-4 text-center py-6">
+          <div class="text-6xl animate-bounce">🏆</div>
+          <h3 class="text-2xl sm:text-4xl font-black text-amber-500">ЖАРАЙСЫҢ, БАЛАҚАЙ!</h3>
+          <p class="text-sm sm:text-base font-extrabold text-slate-700 max-w-md mx-auto">
+            Барлық 3 ойынды сәтті аяқтап, «Коммуникативтік дағды» тапсырмасын орындадың!
+          </p>
+          <div class="text-yellow-500 text-3xl font-black">
+            +15 ⭐ Жұлдызша ұтып алдың!
+          </div>
+          <button onclick="restartFullGameModule()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-extrabold text-sm px-8 py-3.5 rounded-2xl shadow-xl transition transform active:scale-95 inline-flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> Ойындарды қайта бастау
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!--      2. ТАНЫМДЫҚ ЖӘНЕ ЗИЯТКЕРЛІК ДАҒДЫ ИНТЕРАКТИВТІ ОЙЫНДАР       -->
+    <!-- ================================================================= -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-amber-300 space-y-6">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-2 border-b-2 border-amber-100 pb-4">
+        <span class="inline-block bg-amber-100 text-amber-800 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          🧠 Зияткерлік & Логикалық ойындар (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-600 tracking-tight">
+          Салыстырамын, топтастырамын және математикалық ойлаймын
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-amber-900 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-200 inline-block">
+          ТАНЫМДЫҚ ЖӘНЕ ЗИЯТКЕРЛІК ДАҒДЫ
+        </p>
+      </div>
+
+      <!-- Bear Companion Header Banner -->
+      <div class="bg-gradient-to-r from-amber-100 to-orange-100 p-3 sm:p-4 rounded-2xl border-2 border-amber-300 flex items-center gap-3 sm:gap-4 max-w-2xl mx-auto">
+        <img src="image/bear.png" onerror="this.src='https://placehold.co/100x100/f59e0b/ffffff?text=🐻+Аю'" alt="Bear" class="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0 drop-shadow">
+        <div class="text-left space-y-0.5">
+          <h4 class="font-black text-amber-900 text-xs sm:text-sm flex items-center gap-1.5">
+            <span>Ақылды Аюдың көмекшісі</span>
+            <button onclick="playGameAudio('audio/bear_intro1.mp3', 'audio/task_sort.mp3')" class="text-amber-700 hover:text-amber-900"><i class="fa-solid fa-volume-high"></i></button>
+          </h4>
+          <p class="text-[11px] sm:text-xs font-bold text-amber-800">
+            «Сәлем, Балақай! Заттарды сұрыптап, жиындар мен сандардың сырын бірге ашайық!»
+          </p>
+        </div>
+      </div>
+
+      <!-- Cog Game Tab Navigation -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <button onclick="switchCogGameTab(1)" id="cog-tab-1" class="py-2.5 px-2 rounded-2xl bg-amber-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>1-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Сұрыптаушы</span>
+        </button>
+        <button onclick="switchCogGameTab(2)" id="cog-tab-2" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>2-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Бөл & Біріктір</span>
+        </button>
+        <button onclick="switchCogGameTab(3)" id="cog-tab-3" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>3-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">«БІР» құпиясы</span>
+        </button>
+      </div>
+
+      <!-- Cognitive Games Container -->
+      <div id="cog-game-container" class="bg-gradient-to-b from-amber-50/40 to-orange-50/50 rounded-3xl p-4 sm:p-8 border-2 border-amber-200 relative min-h-[460px] flex flex-col justify-center">
+
+        <!-- COG GAME 1: «Сұрыптаушы сиқыршы» -->
+        <div id="cog-1-panel" class="cog-panel space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-amber-600 uppercase">1-Ойын • Заттарды жиынға топтастыру</span>
+            <h3 class="text-xl sm:text-3xl font-black text-amber-900">«Сұрыптаушы сиқыршы»</h3>
+            <p id="sort-task-label" class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Заттарды түсі бойынша қызыл және көк сандыққа сұрыптаңыз! (Затты басып, сандыққа салыңыз)
+            </p>
+          </div>
+
+          <div class="flex justify-center gap-2">
+            <button onclick="playGameAudio('audio/task_sort.mp3', 'audio/bear_intro1.mp3')" class="bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow transition transform active:scale-95 inline-flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> Тапсырманы тыңдау
+            </button>
+            <span id="sort-level-badge" class="bg-orange-100 text-orange-700 font-extrabold text-xs px-3.5 py-2 rounded-full border border-orange-300">
+              1/3 Деңгей (Түсі бойынша)
+            </span>
+          </div>
+
+          <!-- 2 Chest Drop Zones -->
+          <div class="grid grid-cols-2 gap-4 max-w-2xl mx-auto my-2">
+            <div id="chest-red-zone" onclick="handleChestClick('red')" class="bg-rose-50/80 p-4 rounded-3xl border-4 border-dashed border-rose-300 flex flex-col items-center justify-center gap-2 transition hover:border-rose-500 cursor-pointer">
+              <img src="image/chest_red.png" onerror="this.src='https://placehold.co/120x100/fecdd3/9f1239?text=🔴+Қызыл+Сандық'" alt="Red Chest" class="w-24 h-20 sm:w-32 sm:h-24 object-contain">
+              <span id="red-chest-label" class="font-black text-xs sm:text-sm text-rose-800">Қызыл сандық</span>
+              <div id="red-chest-items" class="flex flex-wrap gap-1 justify-center min-h-[30px]"></div>
+            </div>
+
+            <div id="chest-blue-zone" onclick="handleChestClick('blue')" class="bg-sky-50/80 p-4 rounded-3xl border-4 border-dashed border-sky-300 flex flex-col items-center justify-center gap-2 transition hover:border-sky-500 cursor-pointer">
+              <img src="image/chest_blue.png" onerror="this.src='https://placehold.co/120x100/bae6fd/0369a1?text=🔵+Көк+Сандық'" alt="Blue Chest" class="w-24 h-20 sm:w-32 sm:h-24 object-contain">
+              <span id="blue-chest-label" class="font-black text-xs sm:text-sm text-sky-800">Көк сандық</span>
+              <div id="blue-chest-items" class="flex flex-wrap gap-1 justify-center min-h-[30px]"></div>
+            </div>
+          </div>
+
+          <!-- Scatter Items Container -->
+          <div class="bg-white/80 p-4 rounded-3xl border-2 border-amber-200 max-w-2xl mx-auto space-y-2">
+            <span class="text-xs font-bold text-gray-500 block">Шашырап жатқан заттар (Таңдау үшін басыңыз):</span>
+            <div id="sort-items-pool" class="flex flex-wrap justify-center items-center gap-3 min-h-[90px]"></div>
+          </div>
+        </div>
+
+        <!-- COG GAME 2: «Бөл және біріктір» -->
+        <div id="cog-2-panel" class="cog-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-amber-600 uppercase">2-Ойын • Бүтін мен бөлік қатынасы</span>
+            <h3 class="text-xl sm:text-3xl font-black text-amber-900">«Бөл және біріктір»</h3>
+            <p id="cog2-step-label" class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              1-Қадам: Жемістерді басып, түрлері бойынша екі тәрелкеге бөліңіз!
+            </p>
+          </div>
+
+          <div>
+            <button onclick="playGameAudio('audio/task_compare.mp3', 'audio/bear_intro2.mp3')" class="bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> Тапсырманы тыңдау
+            </button>
+          </div>
+
+          <!-- Big Basket (Whole) -->
+          <div class="bg-amber-100/80 p-4 rounded-3xl border-3 border-amber-300 max-w-md mx-auto space-y-2">
+            <div class="flex items-center justify-center gap-2">
+              <img src="image/game2_item1.png" onerror="this.src='https://placehold.co/80x80/fef3c7/b45309?text=🧺+Бүтін+Себет'" class="w-16 h-16 object-contain">
+              <div class="text-left">
+                <span class="font-extrabold text-sm text-amber-900 block">Үлкен Себет (БҮТІН жиын)</span>
+                <span class="text-xs text-amber-700 font-bold">Барлығы: 5 жеміс (3 алма, 2 алмұрт)</span>
+              </div>
+            </div>
+
+            <!-- Fruit items in main basket -->
+            <div id="main-basket-fruits" class="flex flex-wrap justify-center items-center gap-2 min-h-[60px] p-2 bg-white/70 rounded-2xl border border-amber-200">
+              <button onclick="moveFruitToPlate('apple', 1)" id="fruit-apple-1" class="p-2 bg-rose-100 rounded-2xl border-2 border-rose-300 hover:scale-110 active:scale-95 transition flex flex-col items-center">
+                <img src="image/apple.png" onerror="this.src='https://placehold.co/45x45/fecdd3/9f1239?text=🍎'" class="w-10 h-10 object-contain">
+                <span class="text-[9px] font-extrabold text-rose-800">Алма</span>
+              </button>
+              <button onclick="moveFruitToPlate('apple', 2)" id="fruit-apple-2" class="p-2 bg-rose-100 rounded-2xl border-2 border-rose-300 hover:scale-110 active:scale-95 transition flex flex-col items-center">
+                <img src="image/apple.png" onerror="this.src='https://placehold.co/45x45/fecdd3/9f1239?text=🍎'" class="w-10 h-10 object-contain">
+                <span class="text-[9px] font-extrabold text-rose-800">Алма</span>
+              </button>
+              <button onclick="moveFruitToPlate('apple', 3)" id="fruit-apple-3" class="p-2 bg-rose-100 rounded-2xl border-2 border-rose-300 hover:scale-110 active:scale-95 transition flex flex-col items-center">
+                <img src="image/apple.png" onerror="this.src='https://placehold.co/45x45/fecdd3/9f1239?text=🍎'" class="w-10 h-10 object-contain">
+                <span class="text-[9px] font-extrabold text-rose-800">Алма</span>
+              </button>
+              <button onclick="moveFruitToPlate('pear', 1)" id="fruit-pear-1" class="p-2 bg-yellow-100 rounded-2xl border-2 border-yellow-300 hover:scale-110 active:scale-95 transition flex flex-col items-center">
+                <img src="image/pear.png" onerror="this.src='https://placehold.co/45x45/fef08a/854d0e?text=🍐'" class="w-10 h-10 object-contain">
+                <span class="text-[9px] font-extrabold text-yellow-800">Алмұрт</span>
+              </button>
+              <button onclick="moveFruitToPlate('pear', 2)" id="fruit-pear-2" class="p-2 bg-yellow-100 rounded-2xl border-2 border-yellow-300 hover:scale-110 active:scale-95 transition flex flex-col items-center">
+                <img src="image/pear.png" onerror="this.src='https://placehold.co/45x45/fef08a/854d0e?text=🍐'" class="w-10 h-10 object-contain">
+                <span class="text-[9px] font-extrabold text-yellow-800">Алмұрт</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Split Plates (Parts) -->
+          <div class="grid grid-cols-2 gap-4 max-w-xl mx-auto">
+            <div class="bg-white/80 p-3 rounded-2xl border-2 border-rose-200 space-y-1">
+              <span class="text-xs font-extrabold text-rose-700 block">1-Тәрелке (Алмалар):</span>
+              <div id="plate-apples" class="flex flex-wrap gap-1 justify-center min-h-[50px] items-center">
+                <span class="text-[10px] text-gray-400 font-bold italic">Бос</span>
+              </div>
+            </div>
+
+            <div class="bg-white/80 p-3 rounded-2xl border-2 border-yellow-200 space-y-1">
+              <span class="text-xs font-extrabold text-yellow-700 block">2-Тәрелке (Алмұрттар):</span>
+              <div id="plate-pears" class="flex flex-wrap gap-1 justify-center min-h-[50px] items-center">
+                <span class="text-[10px] text-gray-400 font-bold italic">Бос</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparison Quiz Box -->
+          <div id="cog2-quiz-box" class="hidden bg-emerald-50 p-4 rounded-3xl border-2 border-emerald-300 max-w-lg mx-auto space-y-3 animate-springBounce">
+            <h4 class="font-black text-sm sm:text-base text-emerald-900">
+              ❓ Сұрақ: «Қайсысы көп? 3 алма ма, әлде 5 жемісі бар БҮТІН себет пе?»
+            </h4>
+            <div class="flex flex-col sm:flex-row justify-center gap-3">
+              <button onclick="checkCog2Comparison('part')" class="bg-white border-2 border-rose-300 hover:border-rose-500 p-3 rounded-2xl text-xs font-extrabold text-slate-800 shadow hover:scale-105 active:scale-95 transition">
+                🍎 3 Алма (Бөлік)
+              </button>
+              <button onclick="checkCog2Comparison('whole')" class="bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-2xl text-xs font-extrabold shadow-lg hover:scale-105 active:scale-95 transition">
+                🧺 5 Жеміс (Бүтін себет)
+              </button>
+            </div>
+          </div>
+
+          <!-- Recombine Button -->
+          <div id="cog2-recombine-box" class="hidden">
+            <button onclick="recombineFruits()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm px-6 py-3 rounded-2xl shadow-xl transition transform active:scale-95 inline-flex items-center gap-2">
+              <i class="fa-solid fa-arrows-to-circle"></i> Жемістерді себетке қайта біріктіру
+            </button>
+          </div>
+        </div>
+
+        <!-- COG GAME 3: «Бір сөзінің құпиясы» -->
+        <div id="cog-3-panel" class="cog-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-amber-600 uppercase">3-Ойын • Заттар тобын «БІР» жиын ретінде ұғыну</span>
+            <h3 class="text-xl sm:text-3xl font-black text-amber-900">«Бір сөзінің құпиясы»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              5 жеке гүлді ортадағы сиқырлы шеңберге басып жинаңыз!
+            </p>
+          </div>
+
+          <div>
+            <button onclick="playGameAudio('audio/bear_intro2.mp3', 'audio/3oiyn.mp3')" class="bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> Нұсқаулықты тыңдау
+            </button>
+          </div>
+
+          <!-- Magic Glowing Circle "БІР" -->
+          <div id="magic-one-circle" onclick="addFlowerToCircle()" class="w-44 h-44 sm:w-56 sm:h-56 mx-auto rounded-full bg-gradient-to-tr from-pink-400 via-purple-400 to-indigo-400 p-2 shadow-2xl flex flex-col items-center justify-center text-white border-4 border-white animate-magicGlow cursor-pointer transition transform hover:scale-105">
+            <span class="text-3xl sm:text-5xl font-black drop-shadow tracking-wider">БІР</span>
+            <span class="text-[10px] sm:text-xs font-bold text-purple-100 uppercase tracking-widest mt-1">Сиқырлы жиын</span>
+            <span id="flower-counter-label" class="text-xs font-extrabold text-yellow-300 mt-2 bg-purple-900/40 px-3 py-1 rounded-full">
+              0 / 5 гүл жиналды
+            </span>
+          </div>
+
+          <!-- Individual Flowers Pool -->
+          <div id="single-flowers-container" class="flex flex-wrap justify-center items-center gap-3 max-w-lg mx-auto pt-2">
+            <button onclick="addFlowerToCircle(1)" id="flower-btn-1" class="p-3 bg-white rounded-2xl border-2 border-pink-300 shadow hover:scale-110 active:scale-90 transition flex flex-col items-center">
+              <img src="image/gul.png" onerror="this.src='https://placehold.co/60x60/fce7f3/be185d?text=🌸'" class="w-12 h-12 object-contain">
+              <span class="text-[10px] font-extrabold text-pink-700">Жеке гүл</span>
+            </button>
+            <button onclick="addFlowerToCircle(2)" id="flower-btn-2" class="p-3 bg-white rounded-2xl border-2 border-pink-300 shadow hover:scale-110 active:scale-90 transition flex flex-col items-center">
+              <img src="image/gul.png" onerror="this.src='https://placehold.co/60x60/fce7f3/be185d?text=🌸'" class="w-12 h-12 object-contain">
+              <span class="text-[10px] font-extrabold text-pink-700">Жеке гүл</span>
+            </button>
+            <button onclick="addFlowerToCircle(3)" id="flower-btn-3" class="p-3 bg-white rounded-2xl border-2 border-pink-300 shadow hover:scale-110 active:scale-90 transition flex flex-col items-center">
+              <img src="image/gul.png" onerror="this.src='https://placehold.co/60x60/fce7f3/be185d?text=🌸'" class="w-12 h-12 object-contain">
+              <span class="text-[10px] font-extrabold text-pink-700">Жеке гүл</span>
+            </button>
+            <button onclick="addFlowerToCircle(4)" id="flower-btn-4" class="p-3 bg-white rounded-2xl border-2 border-pink-300 shadow hover:scale-110 active:scale-90 transition flex flex-col items-center">
+              <img src="image/gul.png" onerror="this.src='https://placehold.co/60x60/fce7f3/be185d?text=🌸'" class="w-12 h-12 object-contain">
+              <span class="text-[10px] font-extrabold text-pink-700">Жеке гүл</span>
+            </button>
+            <button onclick="addFlowerToCircle(5)" id="flower-btn-5" class="p-3 bg-white rounded-2xl border-2 border-pink-300 shadow hover:scale-110 active:scale-90 transition flex flex-col items-center">
+              <img src="image/gul.png" onerror="this.src='https://placehold.co/60x60/fce7f3/be185d?text=🌸'" class="w-12 h-12 object-contain">
+              <span class="text-[10px] font-extrabold text-pink-700">Жеке гүл</span>
+            </button>
+          </div>
+
+          <!-- Bouquet Transformation Reveal Box -->
+          <div id="bouquet-reveal-box" class="hidden bg-gradient-to-r from-pink-100 to-purple-100 p-6 rounded-3xl border-4 border-pink-300 max-w-md mx-auto space-y-3 animate-springBounce">
+            <img src="image/buket.png" onerror="this.src='https://placehold.co/160x160/fce7f3/be185d?text=💐+1+Шоқ+Гүл'" class="w-32 h-32 object-contain mx-auto drop-shadow-lg">
+            <h4 class="font-black text-base sm:text-lg text-purple-900">
+              «Әр гүл жеке болса да, бәрі бірігіп БІР шоқ гүл болады!»
+            </h4>
+            <p class="text-xs text-purple-700 font-bold">
+              Жарайсың! Бірнеше жеке зат қосылып, БІР жиын құрады!
+            </p>
+          </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="cog-complete-panel" class="cog-panel hidden space-y-4 text-center py-6">
+          <div class="text-6xl animate-bounce">🌟</div>
+          <h3 class="text-2xl sm:text-4xl font-black text-amber-600">КЕРЕМЕТ, АҚЫЛДЫ БАЛАҚАЙ!</h3>
+          <p class="text-sm sm:text-base font-extrabold text-slate-700 max-w-md mx-auto">
+            «Танымдық және зияткерлік дағды» бойынша барлық тапсырмаларды сәтті орындап шықтың!
+          </p>
+          <div class="text-yellow-500 text-3xl font-black">
+            +15 ⭐ Жұлдызша ұтып алдың!
+          </div>
+          <button onclick="restartCogGameModule()" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold text-sm px-8 py-3.5 rounded-2xl shadow-xl transition transform active:scale-95 inline-flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> Ойындарды қайта бастау
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!--      3. ШЫҒАРМАШЫЛЫҚ ДАҒДЫ ИНТЕРАКТИВТІ ОЙЫНДАР (ҚИЯЛДАЙМЫН)       -->
+    <!-- ================================================================= -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-rose-300 space-y-6">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-2 border-b-2 border-rose-100 pb-4">
+        <span class="inline-block bg-rose-100 text-rose-800 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          🎨 Шығармашылық & Қиял ойындары (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-600 tracking-tight">
+          Қиялдаймын және жасаймын
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-rose-900 bg-rose-50 px-4 py-2 rounded-2xl border border-rose-200 inline-block">
+           ШЫҒАРМАШЫЛЫҚ ДАҒДЫ
+        </p>
+      </div>
+
+      <!-- Bear Companion Header Banner -->
+      <div class="bg-gradient-to-r from-rose-100 to-pink-100 p-3 sm:p-4 rounded-2xl border-2 border-rose-300 flex items-center gap-3 sm:gap-4 max-w-2xl mx-auto">
+        <img src="image/bear_hero.png" onerror="this.src='https://placehold.co/100x100/ec4899/ffffff?text=🐻+Суретші'" alt="Hero Bear" class="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0 drop-shadow">
+        <div class="text-left space-y-0.5">
+          <h4 class="font-black text-rose-900 text-xs sm:text-sm flex items-center gap-1.5">
+            <span>Шебер Аюдың шеберханасы</span>
+            <button onclick="playGameAudio('audio/intro_creativity.mp3', 'audio/correct.mp3')" class="text-rose-700 hover:text-rose-900"><i class="fa-solid fa-volume-high"></i></button>
+          </h4>
+          <p class="text-[11px] sm:text-xs font-bold text-rose-800">
+            «Сәлем, Кішкентай Шебер! Қылқаламды алып, өз отбасыңды және ертегілер әлемін бірге бейнелейік!»
+          </p>
+        </div>
+      </div>
+
+      <!-- Creative Game Tab Navigation -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <button onclick="switchCreativeGameTab(1)" id="creative-tab-1" class="py-2.5 px-2 rounded-2xl bg-rose-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-rose-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>1-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Уақыт машинасы</span>
+        </button>
+        <button onclick="switchCreativeGameTab(2)" id="creative-tab-2" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>2-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Бәйтерек & Отбасы</span>
+        </button>
+        <button onclick="switchCreativeGameTab(3)" id="creative-tab-3" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>3-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Ертегілер кеңістігі</span>
+        </button>
+      </div>
+
+      <!-- Creative Games Container -->
+      <div id="creative-game-container" class="bg-gradient-to-b from-rose-50/40 to-pink-50/50 rounded-3xl p-4 sm:p-8 border-2 border-rose-200 relative min-h-[480px] flex flex-col justify-center">
+
+        <!-- CREATIVE GAME 1: «Уақыт машинасы» -->
+        <div id="creative-1-panel" class="creative-panel space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-rose-600 uppercase">1-Ойын • Қылқалам техникасы мен білімге ынта</span>
+            <h3 class="text-xl sm:text-3xl font-black text-rose-900">«Уақыт машинасы: Өз болашағымды саламын»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Қылқалам түрін (көлденең немесе тігінен) және бояу түсін таңдап, болашақ мамандығыңды бейнеле!
+            </p>
+          </div>
+
+          <div class="flex justify-center gap-2">
+            <button onclick="playGameAudio('audio/task_future.mp3', 'audio/correct.mp3')" class="bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> Тапсырманы тыңдау
+            </button>
+          </div>
+
+          <!-- Template Selection -->
+          <div class="flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
+            <button onclick="setPaintTemplate('school')" class="px-3 py-1.5 bg-white rounded-xl border border-rose-300 font-bold text-xs text-rose-800 hover:bg-rose-100">🏫 Мектеп</button>
+            <button onclick="setPaintTemplate('space')" class="px-3 py-1.5 bg-white rounded-xl border border-rose-300 font-bold text-xs text-rose-800 hover:bg-rose-100">🚀 Ғарышкер</button>
+            <button onclick="setPaintTemplate('doctor')" class="px-3 py-1.5 bg-white rounded-xl border border-rose-300 font-bold text-xs text-rose-800 hover:bg-rose-100">🩺 Дәрігер</button>
+            <button onclick="setPaintTemplate('engineer')" class="px-3 py-1.5 bg-white rounded-xl border border-rose-300 font-bold text-xs text-rose-800 hover:bg-rose-100">🏗️ Инженер</button>
+          </div>
+
+          <!-- Brush & Palette Tools -->
+          <div class="flex flex-wrap justify-center items-center gap-4 bg-white/90 p-3 rounded-2xl border border-rose-200 max-w-2xl mx-auto">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-bold text-gray-500">Қылқалам:</span>
+              <button id="brush-horiz-btn" onclick="setBrushType('horizontal')" class="p-2 bg-rose-100 rounded-xl border-2 border-rose-400 hover:scale-105 transition flex items-center gap-1">
+                <span class="text-xs">🖌️</span>
+                <span class="text-[9px] font-extrabold text-rose-900">Көлденең (Кең)</span>
+              </button>
+              <button id="brush-vert-btn" onclick="setBrushType('vertical')" class="p-2 bg-gray-100 rounded-xl border border-gray-300 hover:scale-105 transition flex items-center gap-1">
+                <span class="text-xs">✏️</span>
+                <span class="text-[9px] font-extrabold text-gray-700">Тігінен (Жіңішке)</span>
+              </button>
+            </div>
+
+            <!-- Color Palette -->
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-bold text-gray-500">Түс:</span>
+              <button onclick="setPaintColor('#ef4444')" class="w-7 h-7 rounded-full bg-red-500 ring-2 ring-white shadow hover:scale-110 transition"></button>
+              <button onclick="setPaintColor('#3b82f6')" class="w-7 h-7 rounded-full bg-blue-500 ring-2 ring-white shadow hover:scale-110 transition"></button>
+              <button onclick="setPaintColor('#eab308')" class="w-7 h-7 rounded-full bg-yellow-500 ring-2 ring-white shadow hover:scale-110 transition"></button>
+              <button onclick="setPaintColor('#10b981')" class="w-7 h-7 rounded-full bg-emerald-500 ring-2 ring-white shadow hover:scale-110 transition"></button>
+              <button onclick="setPaintColor('#a855f7')" class="w-7 h-7 rounded-full bg-purple-500 ring-2 ring-white shadow hover:scale-110 transition"></button>
+              <button onclick="setPaintColor('#ec4899')" class="w-7 h-7 rounded-full bg-pink-500 ring-2 ring-white shadow hover:scale-110 transition"></button>
+            </div>
+
+            <button onclick="clearPaintCanvas()" class="px-2.5 py-1 text-[10px] font-bold text-gray-500 hover:text-red-500 underline">
+              <i class="fa-solid fa-eraser"></i> Тазалау
+            </button>
+          </div>
+
+          <!-- Canvas Easel -->
+          <div class="relative max-w-xl mx-auto">
+            <canvas id="paint-canvas" width="500" height="280" class="w-full h-64 sm:h-72 bg-white rounded-3xl border-4 border-rose-300 shadow-inner cursor-crosshair touch-none"></canvas>
+          </div>
+
+          <div>
+            <button onclick="finishPaintingTask()" class="bg-gradient-to-r from-rose-500 to-indigo-600 hover:from-rose-600 hover:to-indigo-700 text-white font-extrabold text-xs sm:text-sm px-7 py-3 rounded-2xl shadow-lg transition transform active:scale-95 inline-flex items-center gap-2">
+              <i class="fa-solid fa-check-circle text-base"></i> Суретті аяқтау (+5 ⭐)
+            </button>
+          </div>
+        </div>
+
+        <!-- CREATIVE GAME 2: «Бәйтерек: Жеті ата және отбасы ағашы» (ТҮЗЕТІЛГЕН) -->
+        <div id="creative-2-panel" class="creative-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-rose-600 uppercase">2-Ойын • Туыстық байланыс & Үлкенге құрмет</span>
+            <h3 class="text-xl sm:text-3xl font-black text-rose-900">«Бәйтерек: Жеті ата және отбасы ағашы»</h3>
+            <p id="c2-step-label" class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              1-Қадам: Отбасы мүшелерін Бәйтерек ағашының бұтақтарына орналастырыңыз!
+            </p>
+          </div>
+
+          <div class="flex justify-center gap-2">
+            <button onclick="playGameAudio('audio/task_family.mp3', 'audio/correct.mp3')" class="bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> Тапсырманы тыңдау
+            </button>
+          </div>
+
+          <!-- Bayterek Family Tree Display -->
+          <div class="relative w-full max-w-lg mx-auto min-h-[300px] bg-emerald-50/60 p-4 rounded-3xl border-2 border-emerald-200 flex flex-col items-center justify-between">
+            <img src="image/family_tree.png" onerror="this.onerror=null; this.src='https://placehold.co/360x280/dcfce7/15803d?text=🌳+БӘЙТЕРЕК+АҒАШЫ';" alt="Family Tree" class="absolute inset-0 w-full h-full object-contain opacity-30 pointer-events-none">
+
+            <!-- Branches Slots -->
+            <div class="relative z-10 w-full space-y-3">
+              <div class="flex justify-around items-center">
+                <div id="tree-slot-grandpa" onclick="placeFamilyMember('grandpa')" class="w-24 h-20 bg-white/90 border-2 border-dashed border-emerald-400 rounded-2xl flex flex-col items-center justify-center p-1 shadow-sm cursor-pointer hover:border-emerald-600 transition">
+                  <span class="text-[9px] font-extrabold text-emerald-800">1. Ата</span>
+                  <div id="slot-grandpa-content" class="text-xs text-gray-400 font-bold">(Бос)</div>
+                </div>
+                <div id="tree-slot-grandma" onclick="placeFamilyMember('grandma')" class="w-24 h-20 bg-white/90 border-2 border-dashed border-emerald-400 rounded-2xl flex flex-col items-center justify-center p-1 shadow-sm cursor-pointer hover:border-emerald-600 transition">
+                  <span class="text-[9px] font-extrabold text-emerald-800">2. Әже</span>
+                  <div id="slot-grandma-content" class="text-xs text-gray-400 font-bold">(Бос)</div>
+                </div>
+              </div>
+
+              <div class="flex justify-around items-center">
+                <div id="tree-slot-paternal" onclick="placeFamilyMember('paternal')" class="w-24 h-20 bg-white/90 border-2 border-dashed border-emerald-400 rounded-2xl flex flex-col items-center justify-center p-1 shadow-sm cursor-pointer hover:border-emerald-600 transition">
+                  <span class="text-[9px] font-extrabold text-emerald-800">3. Өз жұрты</span>
+                  <div id="slot-paternal-content" class="text-xs text-gray-400 font-bold">(Бос)</div>
+                </div>
+                <div id="tree-slot-maternal" onclick="placeFamilyMember('maternal')" class="w-24 h-20 bg-white/90 border-2 border-dashed border-emerald-400 rounded-2xl flex flex-col items-center justify-center p-1 shadow-sm cursor-pointer hover:border-emerald-600 transition">
+                  <span class="text-[9px] font-extrabold text-emerald-800">4. Нағашы жұрт</span>
+                  <div id="slot-maternal-content" class="text-xs text-gray-400 font-bold">(Бос)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Family Members Selection Cards -->
+            <div id="family-members-pool" class="relative z-10 flex flex-wrap justify-center gap-2 pt-3 border-t border-emerald-200 w-full">
+              <button id="fam-btn-grandpa" onclick="selectFamilyMember('grandpa')" class="p-2 bg-white rounded-xl border-2 border-amber-300 hover:scale-105 active:scale-95 transition flex flex-col items-center">
+                <img src="image/grandfather.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/fef3c7/b45309?text=👴';" class="w-9 h-9 object-contain">
+                <span class="text-[9px] font-bold text-slate-800">Ата</span>
+              </button>
+              <button id="fam-btn-grandma" onclick="selectFamilyMember('grandma')" class="p-2 bg-white rounded-xl border-2 border-rose-300 hover:scale-105 active:scale-95 transition flex flex-col items-center">
+                <img src="image/grandmother.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/fce7f3/be185d?text=👵';" class="w-9 h-9 object-contain">
+                <span class="text-[9px] font-bold text-slate-800">Әже</span>
+              </button>
+              <button id="fam-btn-paternal" onclick="selectFamilyMember('paternal')" class="p-2 bg-white rounded-xl border-2 border-blue-300 hover:scale-105 active:scale-95 transition flex flex-col items-center">
+                <img src="image/oz.jpg" onerror="this.onerror=null; this.src='https://placehold.co/40x40/dbeafe/1e40af?text=👨‍👩‍👦';" class="w-9 h-9 object-contain">
+                <span class="text-[9px] font-bold text-slate-800">Өз жұрты</span>
+              </button>
+              <button id="fam-btn-maternal" onclick="selectFamilyMember('maternal')" class="p-2 bg-white rounded-xl border-2 border-purple-300 hover:scale-105 active:scale-95 transition flex flex-col items-center">
+                <img src="image/qaiyn.jpg" onerror="this.onerror=null; this.src='https://placehold.co/40x40/f3e8ff/6b21a8?text=🌿';" class="w-9 h-9 object-contain">
+                <span class="text-[9px] font-bold text-slate-800">Нағашы жұрт</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stage 2: Caring for Elders -->
+          <div id="elder-care-box" class="hidden bg-rose-50 p-4 rounded-3xl border-2 border-rose-300 max-w-lg mx-auto space-y-3 animate-springBounce">
+            <div class="flex items-center justify-center gap-2">
+              <img src="image/house_bg.png" onerror="this.onerror=null; this.src='https://placehold.co/60x60/fce7f3/be185d?text=🏡';" class="w-12 h-12 object-contain">
+              <div class="text-left">
+                <h4 class="font-black text-sm text-rose-900">2-Кезең: Үлкендерге қамқорлық тапсырмасы</h4>
+                <p class="text-[11px] text-rose-700 font-bold">Атаға көзілдірік беріп, Әжеге ыстық шай ұсыныңыз!</p>
+              </div>
+            </div>
+
+            <div class="flex justify-around items-center pt-2">
+              <button onclick="giveElderCare('glasses')" class="p-3 bg-white border-2 border-amber-300 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+                <span class="text-2xl">👓</span>
+                <span class="text-[10px] font-black text-amber-900">Атаға көзілдірік беру</span>
+              </button>
+              <button onclick="giveElderCare('tea')" class="p-3 bg-white border-2 border-rose-300 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+                <span class="text-2xl">🫖</span>
+                <span class="text-[10px] font-black text-rose-900">Әжеге шай ұсыну</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CREATIVE GAME 3: «Ертегілер әлемі: Көлем және кеңістік» -->
+        <div id="creative-3-panel" class="creative-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-rose-600 uppercase">3-Ойын • Кеңістіктік қатынастар & Бояу</span>
+            <h3 class="text-xl sm:text-3xl font-black text-rose-900">«Ертегілер әлемі: Көлем және кеңістік»</h3>
+            <p id="c3-task-prompt" class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Тапсырма: Түлкіні ағаштың АРТЫНА, Аюды үйдің АЛДЫНА орналастырыңыз!
+            </p>
+          </div>
+
+          <div class="flex justify-center gap-2">
+            <button onclick="playGameAudio('audio/task_space.mp3', 'audio/correct.mp3')" class="bg-indigo-500 hover:bg-indigo-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> Тапсырманы тыңдау
+            </button>
+          </div>
+
+          <!-- Fairy Tale Interactive Scene -->
+          <div id="fairy-scene-container" class="relative w-full max-w-xl mx-auto h-72 sm:h-80 bg-sky-100 rounded-3xl border-4 border-indigo-200 overflow-hidden shadow-inner">
+            <img src="image/school_bg.png" onerror="this.onerror=null; this.src='https://placehold.co/600x320/bae6fd/0369a1?text=🌳+Ертегілер+Орманы+және+Үй';" class="absolute inset-0 w-full h-full object-cover">
+
+            <div class="absolute left-6 bottom-4 w-32 h-32 bg-amber-200/90 rounded-2xl border-4 border-amber-600 flex items-center justify-center text-xs font-black text-amber-900 z-20 shadow-md">
+              🏠 Үй
+            </div>
+
+            <div class="absolute right-8 bottom-4 w-28 h-40 bg-emerald-300/90 rounded-t-full border-4 border-emerald-700 flex items-center justify-center text-xs font-black text-emerald-900 z-20 shadow-md">
+              🌳 Ағаш
+            </div>
+
+            <div id="char-fox" class="absolute left-1/2 bottom-8 z-30 transition-all duration-300 p-1 bg-white/80 rounded-2xl border-2 border-orange-400 shadow">
+              <img src="image/fox.png" onerror="this.onerror=null; this.src='https://placehold.co/60x60/ffedd5/c2410c?text=🦊';" class="w-12 h-12 object-contain">
+              <span class="text-[9px] font-extrabold text-orange-900 block">Түлкі</span>
+            </div>
+
+            <div id="char-bear" class="absolute right-1/3 bottom-8 z-30 transition-all duration-300 p-1 bg-white/80 rounded-2xl border-2 border-amber-600 shadow">
+              <img src="image/bear.png" onerror="this.onerror=null; this.src='https://placehold.co/60x60/fef3c7/92400e?text=🐻';" class="w-12 h-12 object-contain">
+              <span class="text-[9px] font-extrabold text-amber-900 block">Аю</span>
+            </div>
+          </div>
+
+          <!-- Position Action Buttons -->
+          <div class="flex flex-wrap justify-center gap-3">
+            <button onclick="moveCharToSpace('fox', 'behind_tree')" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs rounded-2xl shadow transition">
+              🦊 Түлкіні ағаш АРТЫНА қою
+            </button>
+            <button onclick="moveCharToSpace('bear', 'in_front_house')" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs rounded-2xl shadow transition">
+              🐻 Аюды үй АЛДЫНА қою
+            </button>
+          </div>
+
+          <div>
+            <button onclick="checkCreative3Result()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xs sm:text-sm px-7 py-3 rounded-2xl shadow-xl transition transform active:scale-95 inline-flex items-center gap-2">
+              <i class="fa-solid fa-star"></i> Орналасуды тексеру
+            </button>
+          </div>
+        </div>
+
+        <!-- Creative Completion Screen -->
+        <div id="creative-complete-panel" class="creative-panel hidden space-y-4 text-center py-6">
+          <div class="text-6xl animate-bounce">🎨</div>
+          <h3 class="text-2xl sm:text-4xl font-black text-rose-600">КЕРЕМЕТ ШЕБЕРСІҢ, БАЛАҚАЙ!</h3>
+          <p class="text-sm sm:text-base font-extrabold text-slate-700 max-w-md mx-auto">
+            «Шығармашылық дағды» бойынша барлық тапсырмаларды шебер орындап шықтың!
+          </p>
+          <div class="text-yellow-500 text-3xl font-black">
+            +15 ⭐ Жұлдызша ұтып алдың!
+          </div>
+          <button onclick="restartCreativeGameModule()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-extrabold text-sm px-8 py-3.5 rounded-2xl shadow-xl transition transform active:scale-95 inline-flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> Ойындарды қайта бастау
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!--      4. ӘЛЕУМЕТТІК-ЭМОЦИОНАЛДЫҚ ДАҒДЫ ИНТЕРАКТИВТІ ОЙЫНДАР        -->
+    <!-- ================================================================= -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-teal-300 space-y-6">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-2 border-b-2 border-teal-100 pb-4">
+        <span class="inline-block bg-teal-100 text-teal-800 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          ❤️ Сезім & Қарым-қатынас ойындары (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-emerald-600 to-sky-600 tracking-tight">
+         Сезінемін және қарым-қатынас жасаймын
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-teal-900 bg-teal-50 px-4 py-2 rounded-2xl border border-teal-200 inline-block">
+          ӘЛЕУМЕТТІК-ЭМОЦИОНАЛДЫҚ ДАҒДЫ
+        </p>
+      </div>
+
+      <!-- Bear Companion Header Banner -->
+      <div class="bg-gradient-to-r from-teal-100 to-emerald-100 p-3 sm:p-4 rounded-2xl border-2 border-teal-300 flex items-center gap-3 sm:gap-4 max-w-2xl mx-auto">
+        <img src="image/bear.png" onerror="this.onerror=null; this.src='https://placehold.co/100x100/14b8a6/ffffff?text=🐻+Эмоция';" alt="Emotion Bear" class="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0 drop-shadow">
+        <div class="text-left space-y-0.5">
+          <h4 class="font-black text-teal-900 text-xs sm:text-sm flex items-center gap-1.5">
+            <span>Сезімтал Аюдың мектебі</span>
+            <button onclick="playGameAudio('audio/intro_social.mp3', 'audio/correct.mp3')" class="text-teal-700 hover:text-teal-900"><i class="fa-solid fa-volume-high"></i></button>
+          </h4>
+          <p class="text-[11px] sm:text-xs font-bold text-teal-800">
+            «Сәлем, Досым! Сезімдер мен әдептілік сырларын біліп, достармен кеме құрастырайық!»
+          </p>
+        </div>
+      </div>
+
+      <!-- Social Game Tab Navigation -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <button onclick="switchSocialGameTab(1)" id="social-tab-1" class="py-2.5 px-2 rounded-2xl bg-teal-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-teal-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>1-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Эмоциялар айнасы</span>
+        </button>
+        <button onclick="switchSocialGameTab(2)" id="social-tab-2" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>2-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Әдептілік & Таңдау</span>
+        </button>
+        <button onclick="switchSocialGameTab(3)" id="social-tab-3" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <span>3-Ойын:</span>
+          <span class="font-normal text-[10px] sm:text-xs">Топтық Дос-кеме</span>
+        </button>
+      </div>
+
+      <!-- Social Games Container -->
+      <div id="social-game-container" class="bg-gradient-to-b from-teal-50/40 to-emerald-50/50 rounded-3xl p-4 sm:p-8 border-2 border-teal-200 relative min-h-[480px] flex flex-col justify-center">
+
+        <!-- SOCIAL GAME 1: «Эмоциялар айнасы» -->
+        <div id="social-1-panel" class="social-panel space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-teal-600 uppercase">1-Ойын • Эмоцияларды тану және реттеу</span>
+            <h3 class="text-xl sm:text-3xl font-black text-teal-900">«Эмоциялар айнасы: Сезімді таны және түсін»</h3>
+            <p id="s1-instruction" class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              1-Кезең: Оқиғаны тыңдап, Аюдың сезіміне сәйкес эмоция карточкасын таңдаңыз!
+            </p>
+          </div>
+
+          <div class="flex justify-center gap-2">
+            <button onclick="playGameAudio('audio/story_birthday.mp3', 'audio/intro_social.mp3')" class="bg-teal-500 hover:bg-teal-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-volume-high"></i> Оқиғаны тыңдау (Туған күн)
+            </button>
+          </div>
+
+          <!-- Situation Frame -->
+          <div class="bg-white/90 p-4 rounded-3xl border-2 border-teal-200 max-w-md mx-auto space-y-3 shadow-md">
+            <div id="emo-scene-box" class="flex flex-col items-center justify-center gap-2">
+              <img id="emo-bear-img" src="image/bear_emo.png" onerror="this.onerror=null; this.src='https://placehold.co/120x120/ccfbf1/0f766e?text=🎂+Туған+күн';" class="w-28 h-28 object-contain transition transform duration-500">
+              <span id="emo-story-text" class="text-xs font-bold text-slate-700 bg-teal-50 px-3 py-1.5 rounded-xl border border-teal-200">
+                «Аюдың туған күніне достары сыйлық пен шар алып келді!»
+              </span>
+            </div>
+          </div>
+
+          <!-- Emotion Cards -->
+          <div id="emo-cards-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto pt-2">
+            <button onclick="checkEmotionAnswer('happy')" class="p-3 bg-white border-2 border-emerald-300 hover:border-emerald-500 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1 group">
+              <img src="image/happy.png" onerror="this.onerror=null; this.src='https://placehold.co/60x60/dcfce7/166534?text=😊';" class="w-12 h-12 object-contain group-hover:scale-110 transition">
+              <span class="text-xs font-extrabold text-emerald-800">Қуанды</span>
+            </button>
+            <button onclick="checkEmotionAnswer('sad')" class="p-3 bg-white border-2 border-sky-300 hover:border-sky-500 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1 group">
+              <img src="image/sad.png" onerror="this.onerror=null; this.src='https://placehold.co/60x60/e0f2fe/075985?text=😢';" class="w-12 h-12 object-contain group-hover:scale-110 transition">
+              <span class="text-xs font-extrabold text-sky-800">Ренжіді</span>
+            </button>
+            <button onclick="checkEmotionAnswer('angry')" class="p-3 bg-white border-2 border-rose-300 hover:border-rose-500 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1 group">
+              <img src="image/angry.png" onerror="this.onerror=null; this.src='https://placehold.co/60x60/ffe4e6/9f1239?text=😡';" class="w-12 h-12 object-contain group-hover:scale-110 transition">
+              <span class="text-xs font-extrabold text-rose-800">Ашуланды</span>
+            </button>
+            <button onclick="checkEmotionAnswer('surprised')" class="p-3 bg-white border-2 border-amber-300 hover:border-amber-500 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1 group">
+              <img src="image/surprised.png" onerror="this.onerror=null; this.src='https://placehold.co/60x60/fef3c7/b45309?text=😲';" class="w-12 h-12 object-contain group-hover:scale-110 transition">
+              <span class="text-xs font-extrabold text-amber-800">Таңғалды</span>
+            </button>
+          </div>
+
+          <!-- Stage 2: Emotion Regulation (Fixed: Calm Relaxing Tone instead of Kui) -->
+          <div id="emo-regulation-box" class="hidden bg-rose-50 p-4 rounded-3xl border-2 border-rose-300 max-w-lg mx-auto space-y-4 animate-springBounce">
+            <h4 class="font-black text-sm sm:text-base text-rose-900">
+              😡 «Аю ойыншығы сынып қалып, ашуланып тұр! Оған сабасына түсуге көмектесейік!»
+            </h4>
+            
+            <div id="breath-circle" class="w-24 h-24 mx-auto rounded-full bg-rose-300 border-4 border-white shadow-lg flex items-center justify-center text-rose-900 font-extrabold text-xs transition-all duration-1000">
+              🧘 Демалу
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-3">
+              <button onclick="startBreathingExercise()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs px-5 py-3 rounded-2xl shadow-lg transition active:scale-95 inline-flex items-center justify-center gap-2">
+                <i class="fa-solid fa-wind text-base"></i> Терең дем алу 🌬️
+              </button>
+              <button onclick="listenCalmMusic()" class="bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-5 py-3 rounded-2xl shadow-lg transition active:scale-95 inline-flex items-center justify-center gap-2">
+                <i class="fa-solid fa-music text-base"></i> Музыка тыңдау 🎶
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOCIAL GAME 2: «Әдептілік және Дұрыс таңдау» -->
+        <div id="social-2-panel" class="social-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-teal-600 uppercase">2-Ойын • Сиқырлы сөздер және әдептілік</span>
+            <h3 class="text-xl sm:text-3xl font-black text-teal-900">«Әдептілік және Дұрыс таңдау»</h3>
+            <p id="s2-step-label" class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              1-Қадам: Жағдаятқа сәйкес сиқырлы сөзді таңдаңыз!
+            </p>
+          </div>
+
+          <div class="bg-white/90 p-4 rounded-3xl border-2 border-teal-200 max-w-md mx-auto space-y-2 shadow">
+            <div class="flex items-center justify-center gap-3">
+              <span class="text-3xl">🎁</span>
+              <div class="text-left">
+                <span class="font-extrabold text-xs sm:text-sm text-teal-900 block">Жағдаят: Досың саған сыйлық берді. Не айтасың?</span>
+                <span id="magic-word-slot" class="text-xs font-bold text-amber-600 italic">Сөз таңдалмады...</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="magic-words-pool" class="flex flex-wrap justify-center gap-3">
+            <button onclick="selectMagicWord('Сәлеметсіз бе', false)" class="px-5 py-3 bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold text-xs sm:text-sm rounded-2xl shadow-md border-b-4 border-amber-600 transition active:scale-95">
+              ✨ «Сәлеметсіз бе»
+            </button>
+            <button onclick="selectMagicWord('Рахмет', true)" class="px-5 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-md border-b-4 border-emerald-700 transition active:scale-95">
+              ✨ «Рахмет»
+            </button>
+            <button onclick="selectMagicWord('Кешіріңіз', false)" class="px-5 py-3 bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-md border-b-4 border-sky-600 transition active:scale-95">
+              ✨ «Кешіріңіз»
+            </button>
+          </div>
+
+          <!-- Step 2: Good vs Bad Actions -->
+          <div id="action-sorting-box" class="hidden space-y-4 pt-2 animate-springBounce">
+            <h4 class="font-black text-sm sm:text-base text-teal-900">
+              2-Қадам: Әрекеттерді Жақсы (жасыл) немесе Жаман (қызыл) тақтаға сұрыптаңыз!
+            </h4>
+
+            <div class="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+              <div id="board-good" onclick="handleBoardClick('good')" class="bg-emerald-50 p-4 rounded-3xl border-4 border-dashed border-emerald-400 min-h-[140px] flex flex-col items-center justify-start gap-2 cursor-pointer hover:border-emerald-600 transition">
+                <span class="font-black text-xs sm:text-sm text-emerald-800 flex items-center gap-1">
+                  <i class="fa-solid fa-circle-check text-emerald-500"></i> Жақсы әрекеттер
+                </span>
+                <div id="good-actions-list" class="flex flex-wrap gap-1 justify-center"></div>
+              </div>
+
+              <div id="board-bad" onclick="handleBoardClick('bad')" class="bg-rose-50 p-4 rounded-3xl border-4 border-dashed border-rose-400 min-h-[140px] flex flex-col items-center justify-start gap-2 cursor-pointer hover:border-rose-600 transition">
+                <span class="font-black text-xs sm:text-sm text-rose-800 flex items-center gap-1">
+                  <i class="fa-solid fa-circle-xmark text-rose-500"></i> Жаман әрекеттер
+                </span>
+                <div id="bad-actions-list" class="flex flex-wrap gap-1 justify-center"></div>
+              </div>
+            </div>
+
+            <!-- Action Pool -->
+            <div class="bg-white/90 p-3 rounded-2xl border border-teal-200 max-w-xl mx-auto">
+              <span class="text-xs font-bold text-gray-500 block mb-2">Әрекет карточкасын таңдаңыз:</span>
+              <div id="action-items-pool" class="flex flex-wrap justify-center gap-3">
+                <button id="act-btn-1" onclick="selectActionItem(1, 'good', '🌷 Гүл суару')" class="p-2.5 bg-emerald-100 rounded-2xl border-2 border-emerald-300 hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+                  <img src="image/gul.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/dcfce7/15803d?text=🌱';" class="w-10 h-10 object-contain">
+                  <span class="text-[10px] font-extrabold text-emerald-900">🌷 Гүл суару</span>
+                </button>
+                <button id="act-btn-2" onclick="selectActionItem(2, 'bad', '🧸 Ойыншықты сындыру')" class="p-2.5 bg-rose-100 rounded-2xl border-2 border-rose-300 hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+                  <img src="image/bear.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/fecdd3/9f1239?text=💔';" class="w-10 h-10 object-contain">
+                  <span class="text-[10px] font-extrabold text-rose-900">🧸 Ойыншықты сындыру</span>
+                </button>
+                <button id="act-btn-3" onclick="selectActionItem(3, 'good', '👵 Досқа көмектесу')" class="p-2.5 bg-emerald-100 rounded-2xl border-2 border-emerald-300 hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+                  <img src="image/hero_talk.png" onerror="this.onerror=null; this.src='https://placehold.co/40x40/dcfce7/15803d?text=🤝';" class="w-10 h-10 object-contain">
+                  <span class="text-[10px] font-extrabold text-emerald-900">🤝 Досқа көмектесу</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOCIAL GAME 3: «Топтық дос-кеме» -->
+        <div id="social-3-panel" class="social-panel hidden space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-teal-600 uppercase">3-Ойын • Топтық жұмыс және достық</span>
+            <h3 class="text-xl sm:text-3xl font-black text-teal-900">«Топтық дос-кеме: Бірге саяхаттаймыз»</h3>
+            <p id="s3-prompt" class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              1-Қадам: Достардың қолындағы бөлшектерді біріктіріп, ортақ кемені құрастырыңыз!
+            </p>
+          </div>
+
+          <!-- Ship Assembly Container -->
+          <div class="relative w-full max-w-md mx-auto h-64 bg-sky-100/90 rounded-3xl border-4 border-sky-300 overflow-hidden shadow-inner flex flex-col items-center justify-center p-4">
+            <img id="ship-frame-img" src="image/friendship_ship.png" onerror="this.onerror=null; this.src='https://placehold.co/280x180/bae6fd/0284c7?text=⛵+ДОС-КЕМЕ';" class="w-56 h-36 object-contain opacity-40 transition-all duration-500">
+            
+            <div id="ship-parts-status" class="mt-2 text-xs font-extrabold text-sky-900 bg-white/80 px-4 py-1 rounded-full shadow">
+              0 / 3 Бөлшек жиналды
+            </div>
+          </div>
+
+          <!-- Characters with Ship Parts -->
+          <div id="ship-parts-pool" class="flex flex-wrap justify-center gap-3">
+            <button id="part-btn-1" onclick="addShipPart(1, '⛵ Кеме корпусы')" class="p-3 bg-white border-2 border-sky-300 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+              <span class="text-2xl">🪵</span>
+              <span class="text-[10px] font-black text-slate-800">1. Аю (Кеме корпусы)</span>
+            </button>
+            <button id="part-btn-2" onclick="addShipPart(2, '🚩 Желкен')" class="p-3 bg-white border-2 border-sky-300 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+              <span class="text-2xl">🚩</span>
+              <span class="text-[10px] font-black text-slate-800">2. Түлкі (Желкен)</span>
+            </button>
+            <button id="part-btn-3" onclick="addShipPart(3, '⚓ Штурвал')" class="p-3 bg-white border-2 border-sky-300 rounded-2xl shadow hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1">
+              <span class="text-2xl">⚓</span>
+              <span class="text-[10px] font-black text-slate-800">3. Қоян (Штурвал)</span>
+            </button>
+          </div>
+
+          <!-- Conflict Resolution -->
+          <div id="conflict-box" class="hidden bg-amber-50 p-4 rounded-3xl border-2 border-amber-300 max-w-lg mx-auto space-y-3 animate-springBounce">
+            <h4 class="font-black text-sm sm:text-base text-amber-900">
+              🤝 «Ойыншыққа талас туды! Қандай достық шешім қабылдаймыз?»
+            </h4>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-3">
+              <button onclick="resolveConflict('wrong')" class="bg-white border-2 border-rose-300 hover:border-rose-500 p-3 rounded-2xl text-xs font-extrabold text-slate-800 shadow hover:scale-105 active:scale-95 transition">
+                😠 Ойыншықты тартып алу
+              </button>
+              <button onclick="resolveConflict('correct')" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white p-3 rounded-2xl text-xs font-extrabold shadow-lg hover:scale-105 active:scale-95 transition">
+                🤝 Бірге және кезекпен ойнау!
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Completion Screen -->
+        <div id="social-complete-panel" class="social-panel hidden space-y-4 text-center py-6">
+          <div class="text-6xl animate-bounce">💖</div>
+          <h3 class="text-2xl sm:text-4xl font-black text-teal-600">ЖАРАЙСЫҢ, СЕЗІМТАЛ ДОСЫМ!</h3>
+          <p class="text-sm sm:text-base font-extrabold text-slate-700 max-w-md mx-auto">
+            «Әлеуметтік-эмоционалдық дағды» бойынша барлық тапсырмаларды сәтті орындадың!
+          </p>
+          <div class="text-yellow-500 text-3xl font-black">
+            +15 ⭐ Жұлдызша ұтып алдың!
+          </div>
+          <button onclick="restartSocialGameModule()" class="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-extrabold text-sm px-8 py-3.5 rounded-2xl shadow-xl transition transform active:scale-95 inline-flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> Ойындарды қайта бастау
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Custom Notification Modal -->
+  <div id="custom-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl border-4 border-amber-300 animate-springBounce">
+      <div class="text-4xl animate-bounce">⭐</div>
+      <p id="modal-text" class="text-sm font-extrabold text-slate-800 leading-relaxed"></p>
+      <button onclick="closeModal()" class="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-extrabold py-2.5 rounded-2xl shadow-md transition transform active:scale-95">
+        Жақсы
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive Mascot -->
+  <div class="fixed bottom-4 left-4 z-50">
+    <div id="mascot-bubble" class="hidden absolute -top-12 left-0 bg-white px-3.5 py-1.5 rounded-2xl shadow-lg border-2 border-purple-300 text-xs font-bold text-purple-700 whitespace-nowrap animate-bounceSlow">
+      Сәлем, Балақай! Ойнап, білім алайық! 🦊
+    </div>
+    <button id="mascot-btn" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 text-white text-xl sm:text-2xl shadow-2xl border-4 border-white flex items-center justify-center hover:scale-110 active:scale-95 transition">
+      🦊
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-16 text-center text-xs font-bold text-slate-500 px-4 pb-6">
+    <p>© ZEREK BALA - Барлық құқықтар қорғалған.</p>
+    <p class="mt-1.5 text-sm font-black text-purple-700">
+      Авторы: <span class="text-amber-600">Отарова Әсел Сатыбалдықызы</span>
+    </p>
+  </footer>
+
+  <script>
+    // ===================================================================
+    // GLOBAL UI & AUDIO UTILITIES
+    // ===================================================================
+    function showNotification(msg) {
+      const modal = document.getElementById("custom-modal");
+      const text = document.getElementById("modal-text");
+      if (modal && text) {
+        text.textContent = msg;
+        modal.classList.remove("hidden");
+      }
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("custom-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function playGameAudio(primaryPath, fallbackPath) {
+      const audioObj = new Audio(primaryPath);
+      audioObj.play().catch(err => {
+        if (fallbackPath) {
+          const fallbackObj = new Audio(fallbackPath);
+          fallbackObj.play().catch(e => console.log("Fallback audio failed"));
+        }
+      });
+    }
+
+    // Жеңіл интерактивті шерту дыбысы (Web Audio API)
+    function playSoftClick() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.11);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    // Аюды тыныштандыратын нәзік сазды әуен (Calming Synthesizer)
+    function playCalmMusicTone() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const notes = [
+          { f: 523.25, d: 0.6, t: 0.0 }, // C5
+          { f: 659.25, d: 0.6, t: 0.4 }, // E5
+          { f: 783.99, d: 0.8, t: 0.8 }, // G5
+          { f: 659.25, d: 0.6, t: 1.3 }, // E5
+          { f: 587.33, d: 0.6, t: 1.8 }, // D5
+          { f: 523.25, d: 1.2, t: 2.3 }  // C5
+        ];
+
+        notes.forEach(n => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(n.f, ctx.currentTime + n.t);
+          
+          gain.gain.setValueAtTime(0, ctx.currentTime + n.t);
+          gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + n.t + 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + n.t + n.d);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + n.t);
+          osc.stop(ctx.currentTime + n.t + n.d + 0.05);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    // ===================================================================
+    // AUDIO PLAYER LOGIC
+    // ===================================================================
+    const tracks = [
+      { title: "🎶 Балбырауын күйі", src: "audio/music1.mp3" },
+      { title: "🎶 Адай күйі", src: "audio/music2.mp3" },
+      { title: "🎶 Көңілашар күйі", src: "audio/music3.mp3" }
+    ];
+
+    let currentTrackIndex = 0;
+    let audio, playPauseBtn, playIcon, prevBtn, nextBtn, trackTitle, trackStatus, seekBar, volumeBar, currentTimeEl, durationTimeEl, equalizerBars, volumeIcon, starCountEl;
+
+    function loadTrack(index) {
+      if (!audio) return;
+      currentTrackIndex = index;
+      audio.src = tracks[index].src;
+      trackTitle.textContent = tracks[index].title;
+      seekBar.value = 0;
+      currentTimeEl.textContent = "0:00";
+    }
+
+    function togglePlay() {
+      if (!audio) return;
+      if (audio.paused) {
+        audio.play().then(() => {
+          playIcon.classList.remove("fa-play");
+          playIcon.classList.add("fa-pause");
+          trackStatus.textContent = "Ойнатылуда...";
+          equalizerBars.classList.remove("opacity-40");
+          equalizerBars.classList.add("animate-pulse");
+        }).catch(err => {
+          trackStatus.textContent = "Файл табылмады";
+        });
+      } else {
+        audio.pause();
+        playIcon.classList.remove("fa-pause");
+        playIcon.classList.add("fa-play");
+        trackStatus.textContent = "Тоқтатылды";
+        equalizerBars.classList.add("opacity-40");
+        equalizerBars.classList.remove("animate-pulse");
+      }
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // ===================================================================
+    // MODULE 1: COMMUNICATIVE SKILLS
+    // ===================================================================
+    function switchGameTab(tabIndex) {
+      document.querySelectorAll(".game-panel").forEach(panel => panel.classList.add("hidden"));
+      
+      const p1 = document.getElementById("game-1-panel");
+      const p2 = document.getElementById("game-2-panel");
+      const p3 = document.getElementById("game-3-panel");
+
+      const t1 = document.getElementById("game-tab-1");
+      const t2 = document.getElementById("game-tab-2");
+      const t3 = document.getElementById("game-tab-3");
+
+      [t1, t2, t3].forEach((t, idx) => {
+        if (idx + 1 === tabIndex) {
+          t.className = "py-2.5 px-2 rounded-2xl bg-purple-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-purple-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        } else {
+          t.className = "py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        }
+      });
+
+      if (tabIndex === 1) p1.classList.remove("hidden");
+      if (tabIndex === 2) p2.classList.remove("hidden");
+      if (tabIndex === 3) p3.classList.remove("hidden");
+    }
+
+    function checkGame1Answer(position) {
+      if (position === 'start') {
+        playGameAudio("audio/correct.mp3", "audio/applause.mp3");
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        setTimeout(() => {
+          switchGameTab(2);
+        }, 1200);
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Қайтадан ойланып көр, Балақай! «Қалам» сөзі қай дыбыстан басталады? 😊");
+      }
+    }
+
+    let selectedGame2Words = [];
+    const correctGrammarSequence = ["Үш", "үлкен", "қызыл", "алма"];
+
+    function selectGame2Word(text, btnId) {
+      if (selectedGame2Words.length < 4) {
+        const slotIdx = selectedGame2Words.length;
+        selectedGame2Words.push(text);
+        
+        const slot = document.getElementById(`g2-slot-${slotIdx}`);
+        slot.textContent = text;
+        slot.classList.remove("border-dashed", "text-purple-600");
+        slot.classList.add("bg-purple-500", "text-white", "border-solid");
+
+        document.getElementById(btnId).classList.add("opacity-30", "pointer-events-none");
+
+        if (selectedGame2Words.length === 4) {
+          if (JSON.stringify(selectedGame2Words) === JSON.stringify(correctGrammarSequence)) {
+            playGameAudio("audio/qaz_alma.mp3", "audio/correct.mp3");
+            const bag = document.getElementById("shop-bag-img");
+            bag.classList.add("animate-bounce");
+
+            let currentStars = parseInt(starCountEl.textContent);
+            starCountEl.textContent = currentStars + 5;
+
+            setTimeout(() => {
+              switchGameTab(3);
+            }, 2000);
+          } else {
+            playGameAudio("audio/wrong.mp3");
+            setTimeout(() => {
+              showNotification("Сөздердің реті дұрыс емес. Қайтадан құрастырып көр!");
+              resetGame2();
+            }, 500);
+          }
+        }
+      }
+    }
+
+    function resetGame2() {
+      selectedGame2Words = [];
+      for (let i = 0; i < 4; i++) {
+        const slot = document.getElementById(`g2-slot-${i}`);
+        slot.textContent = `${i + 1}-сөз`;
+        slot.className = "w-20 h-12 sm:w-28 sm:h-14 bg-white border-2 border-dashed border-purple-300 rounded-2xl flex items-center justify-center font-black text-xs sm:text-sm text-purple-600 shadow-inner";
+      }
+      ["g2-card-ush", "g2-card-ulken", "g2-card-qyzyl", "g2-card-alma"].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove("opacity-30", "pointer-events-none");
+      });
+    }
+
+    function checkGame3Answer(isCorrect) {
+      if (isCorrect) {
+        playGameAudio("audio/win.mp3", "audio/correct.mp3");
+
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        setTimeout(() => {
+          document.querySelectorAll(".game-panel").forEach(p => p.classList.add("hidden"));
+          document.getElementById("game-complete").classList.remove("hidden");
+        }, 1500);
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Оқиғаның одан да жақсы жалғасын таңдап көр!");
+      }
+    }
+
+    function restartFullGameModule() {
+      resetGame2();
+      document.getElementById("game-complete").classList.add("hidden");
+      switchGameTab(1);
+    }
+
+    // ===================================================================
+    // MODULE 2: COGNITIVE SKILLS
+    // ===================================================================
+    let currentCogLevel = 1;
+    let selectedSortItem = null;
+    let itemsSortedCount = 0;
+
+    const sortLevelsData = [
+      {
+        taskText: "1-Деңгей (Түсі бойынша): Түсі қызыл заттарды қызыл сандыққа, көк заттарды көк сандыққа салыңыз!",
+        badge: "1/3 Деңгей (Түсі бойынша)",
+        redLabel: "Қызыл заттар",
+        blueLabel: "Көк заттар",
+        items: [
+          { id: 's1', name: 'Қызыл шар', category: 'red', img: 'image/shar.png', placeholder: '🔴' },
+          { id: 's2', name: 'Көк машина', category: 'blue', img: 'image/car.png', placeholder: '🔵' },
+          { id: 's3', name: 'Қызыл алма', category: 'red', img: 'image/apple.png', placeholder: '🍎' },
+          { id: 's4', name: 'Көк доп', category: 'blue', img: 'image/dop.png', placeholder: '⚽' },
+          { id: 's5', name: 'Қызыл гүл', category: 'red', img: 'image/gul.png', placeholder: '🌹' },
+          { id: 's6', name: 'Көк текше', category: 'blue', img: 'image/tekshe.png', placeholder: '🟦' }
+        ]
+      },
+      {
+        taskText: "2-Деңгей (Өлшемі бойынша): Үлкен заттарды қызыл сандыққа, кішкентай заттарды көк сандыққа сұрыптаңыз!",
+        badge: "2/3 Деңгей (Өлшемі бойынша)",
+        redLabel: "Үлкен заттар 🐘",
+        blueLabel: "Кішкентай заттар 🐭",
+        items: [
+          { id: 's1', name: 'Үлкен себет', category: 'red', img: 'image/chest_red.png', placeholder: '🧺 (Үлкен)' },
+          { id: 's2', name: 'Кіші себет', category: 'blue', img: 'image/chest_blue.png', placeholder: '🧺 (Кіші)' },
+          { id: 's3', name: 'Үлкен доп', category: 'red', img: 'image/dop.png', placeholder: '⚽ (Үлкен)' },
+          { id: 's4', name: 'Кіші алма', category: 'blue', img: 'image/apple.png', placeholder: '🍎 (Кіші)' },
+          { id: 's5', name: 'Үлкен аю', category: 'red', img: 'image/bear.png', placeholder: '🐻 (Үлкен)' },
+          { id: 's6', name: 'Кіші гүл', category: 'blue', img: 'image/gul.png', placeholder: '🌸 (Кіші)' }
+        ]
+      },
+      {
+        taskText: "3-Деңгей (Қолданылуы): Жемістерді қызыл сандыққа, ойыншықтарды көк сандыққа топтастырыңыз!",
+        badge: "3/3 Деңгей (Қолданылуы бойынша)",
+        redLabel: "Жемістер 🍎",
+        blueLabel: "Ойыншықтар 🧸",
+        items: [
+          { id: 's1', name: 'Алма', category: 'red', img: 'image/apple.png', placeholder: '🍎' },
+          { id: 's2', name: 'Аю', category: 'blue', img: 'image/bear.png', placeholder: '🧸' },
+          { id: 's3', name: 'Алмұрт', category: 'red', img: 'image/pear.png', placeholder: '🍐' },
+          { id: 's4', name: 'Көк сандықша', category: 'blue', img: 'image/chest_blue.png', placeholder: '🧩' },
+          { id: 's5', name: 'Қызыл жеміс', category: 'red', img: 'image/zhemis.png', placeholder: '🍒' },
+          { id: 's6', name: 'Доп', category: 'blue', img: 'image/dop.png', placeholder: '⚽' }
+        ]
+      }
+    ];
+
+    function switchCogGameTab(tabIndex) {
+      document.querySelectorAll(".cog-panel").forEach(panel => panel.classList.add("hidden"));
+      
+      const p1 = document.getElementById("cog-1-panel");
+      const p2 = document.getElementById("cog-2-panel");
+      const p3 = document.getElementById("cog-3-panel");
+
+      const t1 = document.getElementById("cog-tab-1");
+      const t2 = document.getElementById("cog-tab-2");
+      const t3 = document.getElementById("cog-tab-3");
+
+      [t1, t2, t3].forEach((t, idx) => {
+        if (idx + 1 === tabIndex) {
+          t.className = "py-2.5 px-2 rounded-2xl bg-amber-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        } else {
+          t.className = "py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        }
+      });
+
+      if (tabIndex === 1) {
+        p1.classList.remove("hidden");
+        initCog1Level(currentCogLevel - 1);
+      }
+      if (tabIndex === 2) p2.classList.remove("hidden");
+      if (tabIndex === 3) p3.classList.remove("hidden");
+    }
+
+    function initCog1Level(levelIdx) {
+      const data = sortLevelsData[levelIdx];
+      document.getElementById("sort-task-label").textContent = data.taskText;
+      document.getElementById("sort-level-badge").textContent = data.badge;
+      document.getElementById("red-chest-label").textContent = data.redLabel;
+      document.getElementById("blue-chest-label").textContent = data.blueLabel;
+
+      document.getElementById("red-chest-items").innerHTML = "";
+      document.getElementById("blue-chest-items").innerHTML = "";
+      itemsSortedCount = 0;
+      selectedSortItem = null;
+
+      const pool = document.getElementById("sort-items-pool");
+      pool.innerHTML = "";
+
+      data.items.forEach(item => {
+        const btn = document.createElement("button");
+        btn.id = `sort-item-${item.id}`;
+        btn.setAttribute("data-category", item.category);
+        btn.className = "p-2.5 bg-amber-100 rounded-2xl border-2 border-amber-300 hover:border-amber-500 hover:scale-105 active:scale-95 transition flex flex-col items-center gap-1 shadow-sm";
+        btn.onclick = () => selectSortItem(item.id, item.category);
+
+        btn.innerHTML = `
+          <img src="${item.img}" onerror="this.onerror=null; this.src='https://placehold.co/50x50/fde68a/92400e?text=${encodeURIComponent(item.placeholder)}';" class="w-10 h-10 object-contain">
+          <span class="text-[10px] font-extrabold text-amber-900">${item.name}</span>
+        `;
+        pool.appendChild(btn);
+      });
+    }
+
+    function selectSortItem(itemId, category) {
+      playSoftClick();
+      document.querySelectorAll("#sort-items-pool button").forEach(b => b.classList.remove("ring-4", "ring-amber-400", "scale-110"));
+      
+      const itemBtn = document.getElementById(`sort-item-${itemId}`);
+      if (itemBtn) {
+        itemBtn.classList.add("ring-4", "ring-amber-400", "scale-110");
+        selectedSortItem = { id: itemId, category: category, element: itemBtn };
+      }
+    }
+
+    function handleChestClick(targetCategory) {
+      if (!selectedSortItem) {
+        showNotification("Алдымен шашырап жатқан затты шертіп таңдаңыз!");
+        return;
+      }
+
+      if (selectedSortItem.category === targetCategory) {
+        playGameAudio("audio/correct.mp3");
+        
+        const targetContainer = document.getElementById(`${targetCategory}-chest-items`);
+        selectedSortItem.element.classList.remove("ring-4", "ring-amber-400", "scale-110");
+        selectedSortItem.element.className = "p-1 bg-white rounded-xl border border-amber-200 text-[10px] font-extrabold text-slate-700 animate-springBounce";
+        targetContainer.appendChild(selectedSortItem.element);
+
+        selectedSortItem = null;
+        itemsSortedCount++;
+
+        if (itemsSortedCount >= 6) {
+          playGameAudio("audio/win.mp3", "audio/correct.mp3");
+          let currentStars = parseInt(starCountEl.textContent);
+          starCountEl.textContent = currentStars + 5;
+
+          setTimeout(() => {
+            if (currentCogLevel < 3) {
+              currentCogLevel++;
+              showNotification(`Жарайсың! ${currentCogLevel}-деңгейге өттің! ⭐`);
+              initCog1Level(currentCogLevel - 1);
+            } else {
+              showNotification("1-Ойынды толық аяқтадың! 2-Ойынға өтеміз! 🎉");
+              switchCogGameTab(2);
+            }
+          }, 1000);
+        }
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        selectedSortItem.element.classList.add("animate-wiggle");
+        setTimeout(() => selectedSortItem.element.classList.remove("animate-wiggle"), 500);
+        showNotification("Қате! Сандықтың түсіне немесе санатына қайтадан мұқият қараңыз! 😊");
+      }
+    }
+
+    let splitFruitsCount = 0;
+
+    function moveFruitToPlate(type, id) {
+      playSoftClick();
+      const btn = document.getElementById(`fruit-${type}-${id}`);
+      if (!btn) return;
+
+      if (type === 'apple') {
+        const plate = document.getElementById("plate-apples");
+        if (plate.querySelector('span')) plate.innerHTML = '';
+        plate.appendChild(btn);
+      } else {
+        const plate = document.getElementById("plate-pears");
+        if (plate.querySelector('span')) plate.innerHTML = '';
+        plate.appendChild(btn);
+      }
+
+      splitFruitsCount++;
+      if (splitFruitsCount >= 5) {
+        document.getElementById("cog2-step-label").textContent = "2-Қадам: Салыстыру сұрағына дұрыс жауап беріңіз!";
+        document.getElementById("cog2-quiz-box").classList.remove("hidden");
+      }
+    }
+
+    function checkCog2Comparison(choice) {
+      if (choice === 'whole') {
+        playGameAudio("audio/correct.mp3", "audio/win.mp3");
+        showNotification("ӨТЕ ДҰРЫС! «Бүтін жиын бөліктен ҮЛКЕН!» (5 жеміс 3 алмадан көп) 🧺🌟");
+        
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        document.getElementById("cog2-quiz-box").classList.add("hidden");
+        document.getElementById("cog2-recombine-box").classList.remove("hidden");
+        document.getElementById("cog2-step-label").textContent = "3-Қадам: Жемістерді қайтадан себетке біріктіріңіз!";
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Қайтадан ойланып көр! 5 жемісі бар бүтін себет пен 3 алманың қайсысы көп? 😊");
+      }
+    }
+
+    function recombineFruits() {
+      playSoftClick();
+      const basket = document.getElementById("main-basket-fruits");
+      
+      ["fruit-apple-1", "fruit-apple-2", "fruit-apple-3", "fruit-pear-1", "fruit-pear-2"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) basket.appendChild(el);
+      });
+
+      document.getElementById("plate-apples").innerHTML = '<span class="text-[10px] text-gray-400 font-bold italic">Бос</span>';
+      document.getElementById("plate-pears").innerHTML = '<span class="text-[10px] text-gray-400 font-bold italic">Бос</span>';
+      document.getElementById("cog2-recombine-box").classList.add("hidden");
+
+      setTimeout(() => {
+        showNotification("Тамаша! 2-Ойын да аяқталды! 3-Ойынға өтеміз! 🚀");
+        switchCogGameTab(3);
+      }, 800);
+    }
+
+    let addedFlowersCount = 0;
+
+    function addFlowerToCircle(btnIdx) {
+      if (btnIdx) {
+        const btn = document.getElementById(`flower-btn-${btnIdx}`);
+        if (btn) btn.classList.add("hidden");
+      }
+
+      addedFlowersCount++;
+      playSoftClick();
+
+      document.getElementById("flower-counter-label").textContent = `${addedFlowersCount} / 5 гүл жиналды`;
+
+      if (addedFlowersCount >= 5) {
+        playGameAudio("audio/win.mp3");
+        document.getElementById("magic-one-circle").classList.add("hidden");
+        document.getElementById("single-flowers-container").classList.add("hidden");
+        document.getElementById("bouquet-reveal-box").classList.remove("hidden");
+
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        setTimeout(() => {
+          document.querySelectorAll(".cog-panel").forEach(p => p.classList.add("hidden"));
+          document.getElementById("cog-complete-panel").classList.remove("hidden");
+        }, 2000);
+      }
+    }
+
+    function restartCogGameModule() {
+      currentCogLevel = 1;
+      splitFruitsCount = 0;
+      addedFlowersCount = 0;
+
+      document.getElementById("cog-complete-panel").classList.add("hidden");
+      document.getElementById("magic-one-circle").classList.remove("hidden");
+      document.getElementById("single-flowers-container").classList.remove("hidden");
+      document.getElementById("bouquet-reveal-box").classList.add("hidden");
+      document.getElementById("flower-counter-label").textContent = "0 / 5 гүл жиналды";
+
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`flower-btn-${i}`);
+        if (btn) btn.classList.remove("hidden");
+      }
+
+      switchCogGameTab(1);
+    }
+
+    // ===================================================================
+    // MODULE 3: CREATIVE SKILLS
+    // ===================================================================
+    function switchCreativeGameTab(tabIndex) {
+      document.querySelectorAll(".creative-panel").forEach(panel => panel.classList.add("hidden"));
+      
+      const p1 = document.getElementById("creative-1-panel");
+      const p2 = document.getElementById("creative-2-panel");
+      const p3 = document.getElementById("creative-3-panel");
+
+      const t1 = document.getElementById("creative-tab-1");
+      const t2 = document.getElementById("creative-tab-2");
+      const t3 = document.getElementById("creative-tab-3");
+
+      [t1, t2, t3].forEach((t, idx) => {
+        if (idx + 1 === tabIndex) {
+          t.className = "py-2.5 px-2 rounded-2xl bg-rose-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-rose-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        } else {
+          t.className = "py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        }
+      });
+
+      if (tabIndex === 1) {
+        p1.classList.remove("hidden");
+        initCanvasLogic();
+      }
+      if (tabIndex === 2) p2.classList.remove("hidden");
+      if (tabIndex === 3) p3.classList.remove("hidden");
+    }
+
+    let canvas, ctx;
+    let isPainting = false;
+    let currentBrushType = 'horizontal';
+    let currentPaintColor = '#ef4444';
+
+    function initCanvasLogic() {
+      canvas = document.getElementById("paint-canvas");
+      if (!canvas) return;
+      ctx = canvas.getContext("2d");
+
+      setPaintTemplate('school');
+
+      canvas.onmousedown = startPainting;
+      canvas.onmousemove = drawPainting;
+      canvas.onmouseup = stopPainting;
+      canvas.onmouseleave = stopPainting;
+
+      canvas.ontouchstart = (e) => {
+        e.preventDefault();
+        startPainting(e.touches[0]);
+      };
+      canvas.ontouchmove = (e) => {
+        e.preventDefault();
+        drawPainting(e.touches[0]);
+      };
+      canvas.ontouchend = stopPainting;
+    }
+
+    function setBrushType(type) {
+      currentBrushType = type;
+      const hBtn = document.getElementById("brush-horiz-btn");
+      const vBtn = document.getElementById("brush-vert-btn");
+
+      if (type === 'horizontal') {
+        hBtn.className = "p-2 bg-rose-100 rounded-xl border-2 border-rose-400 hover:scale-105 transition flex items-center gap-1";
+        vBtn.className = "p-2 bg-gray-100 rounded-xl border border-gray-300 hover:scale-105 transition flex items-center gap-1";
+      } else {
+        vBtn.className = "p-2 bg-rose-100 rounded-xl border-2 border-rose-400 hover:scale-105 transition flex items-center gap-1";
+        hBtn.className = "p-2 bg-gray-100 rounded-xl border border-gray-300 hover:scale-105 transition flex items-center gap-1";
+      }
+    }
+
+    function setPaintColor(color) {
+      currentPaintColor = color;
+    }
+
+    function startPainting(e) {
+      isPainting = true;
+      playGameAudio("audio/paint_sound.mp3");
+      drawPainting(e);
+    }
+
+    function drawPainting(e) {
+      if (!isPainting || !ctx) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || e.pageX) - rect.left;
+      const y = (e.clientY || e.pageY) - rect.top;
+
+      ctx.fillStyle = currentPaintColor;
+      ctx.strokeStyle = currentPaintColor;
+
+      if (currentBrushType === 'horizontal') {
+        ctx.fillRect(x - 15, y - 5, 30, 10);
+      } else {
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function stopPainting() {
+      isPainting = false;
+      if (ctx) ctx.beginPath();
+    }
+
+    function clearPaintCanvas() {
+      if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function setPaintTemplate(templateName) {
+      clearPaintCanvas();
+      if (!ctx || !canvas) return;
+
+      ctx.fillStyle = "#f8fafc";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = "#cbd5e1";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+      ctx.font = "bold 16px Montserrat";
+      ctx.fillStyle = "#94a3b8";
+
+      if (templateName === 'school') {
+        ctx.fillText("🏫 Болашақ мектебім", 40, 50);
+      } else if (templateName === 'space') {
+        ctx.fillText("🚀 Ғарышкер болу", 40, 50);
+      } else if (templateName === 'doctor') {
+        ctx.fillText("🩺 Мейірімді Дәрігер", 40, 50);
+      } else {
+        ctx.fillText("🏗️ Ақылды Инженер", 40, 50);
+      }
+    }
+
+    function finishPaintingTask() {
+      playGameAudio("audio/task_future.mp3", "audio/win.mp3");
+      let currentStars = parseInt(starCountEl.textContent);
+      starCountEl.textContent = currentStars + 5;
+
+      showNotification("ЖАРАЙСЫҢ! Керемет өнер туындысы шықты! ⭐ (+5 Жұлдызша)");
+      setTimeout(() => {
+        switchCreativeGameTab(2);
+      }, 1200);
+    }
+
+    // ТҮЗЕТІЛГЕН: БӘЙТЕРЕК ОЙЫНЫ (ҚАЙТАЛАНАТЫН АУДИОСЫЗ)
+    let selectedFamilyMember = null;
+    let placedFamilyCount = 0;
+
+    const familyMemberNames = {
+      grandpa: 'Ата',
+      grandma: 'Әже',
+      paternal: 'Өз жұрты',
+      maternal: 'Нағашы жұрт'
+    };
+
+    function selectFamilyMember(memberKey) {
+      playSoftClick();
+      selectedFamilyMember = memberKey;
+      const memberTitle = familyMemberNames[memberKey] || memberKey;
+      showNotification(`«${memberTitle}» таңдалды. Енді Бәйтерек ағашындағы тиісті орынды басыңыз! 🌳`);
+    }
+
+    function placeFamilyMember(slotKey) {
+      if (!selectedFamilyMember) {
+        showNotification("Алдымен төменнен отбасы мүшесін шертіп таңдаңыз!");
+        return;
+      }
+
+      if (selectedFamilyMember === slotKey) {
+        playGameAudio("audio/correct.mp3");
+        const slotEl = document.getElementById(`slot-${slotKey}-content`);
+        const namesMap = {
+          grandpa: '👴 Ата',
+          grandma: '👵 Әже',
+          paternal: '👨‍👩‍👦 Өз жұрты',
+          maternal: '🌿 Нағашы жұрт'
+        };
+
+        slotEl.textContent = namesMap[slotKey];
+        slotEl.className = "text-xs text-emerald-900 font-extrabold bg-emerald-100 px-2 py-1 rounded-xl animate-springBounce";
+
+        document.getElementById(`fam-btn-${slotKey}`).classList.add("opacity-30", "pointer-events-none");
+        selectedFamilyMember = null;
+        placedFamilyCount++;
+
+        if (placedFamilyCount >= 4) {
+          playGameAudio("audio/correct.mp3");
+          document.getElementById("c2-step-label").textContent = "2-Қадам: Үлкендерге қамқорлық тапсырмасын орындаңыз!";
+          document.getElementById("elder-care-box").classList.remove("hidden");
+        }
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Орын қате! Отбасы бұтағына қайтадан мұқият қараңыз! 😊");
+      }
+    }
+
+    function giveElderCare(actionType) {
+      if (actionType === 'glasses') {
+        playGameAudio("audio/thanks_grandpa.mp3", "audio/correct.mp3");
+        showNotification("👴 Атасы: «Рақмет, айналайын! Көзілдірікпен кітапты жақсы көретін болдым!» 💖");
+      } else {
+        playGameAudio("audio/thanks_grandpa.mp3", "audio/correct.mp3");
+        showNotification("👵 Әжесі: «Береке тап, балапаным! Ыстық шайың өте дәмді екен!» ☕💖");
+      }
+
+      let currentStars = parseInt(starCountEl.textContent);
+      starCountEl.textContent = currentStars + 5;
+
+      setTimeout(() => {
+        showNotification("2-Ойын аяқталды! 3-Ойынға өтеміз! 🚀");
+        switchCreativeGameTab(3);
+      }, 1500);
+    }
+
+    let charPositions = {
+      fox: 'default',
+      bear: 'default'
+    };
+
+    function moveCharToSpace(charKey, positionType) {
+      playSoftClick();
+      const fox = document.getElementById("char-fox");
+      const bear = document.getElementById("char-bear");
+
+      if (charKey === 'fox' && positionType === 'behind_tree') {
+        fox.style.left = '75%';
+        fox.style.bottom = '20px';
+        fox.style.zIndex = '10';
+        charPositions.fox = 'behind_tree';
+        showNotification("🦊 Түлкі ағаштың АРТЫНА жасырынды!");
+      }
+
+      if (charKey === 'bear' && positionType === 'in_front_house') {
+        bear.style.left = '12%';
+        bear.style.bottom = '10px';
+        bear.style.zIndex = '30';
+        charPositions.bear = 'in_front_house';
+        showNotification("🐻 Аю үйдің АЛДЫНА орналасты!");
+      }
+    }
+
+    function checkCreative3Result() {
+      if (charPositions.fox === 'behind_tree' && charPositions.bear === 'in_front_house') {
+        playGameAudio("audio/win.mp3", "audio/correct.mp3");
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        setTimeout(() => {
+          document.querySelectorAll(".creative-panel").forEach(p => p.classList.add("hidden"));
+          document.getElementById("creative-complete-panel").classList.remove("hidden");
+        }, 1200);
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Балақай! Түлкіні ағаш АРТЫНА және Аюды үй АЛДЫНА толық орналастырыңыз! 😊");
+      }
+    }
+
+    function restartCreativeGameModule() {
+      placedFamilyCount = 0;
+      selectedFamilyMember = null;
+      charPositions = { fox: 'default', bear: 'default' };
+
+      document.getElementById("creative-complete-panel").classList.add("hidden");
+      document.getElementById("elder-care-box").classList.add("hidden");
+      document.getElementById("c2-step-label").textContent = "1-Қадам: Отбасы мүшелерін Бәйтерек ағашының бұтақтарына орналастырыңыз!";
+
+      ["grandpa", "grandma", "paternal", "maternal"].forEach(k => {
+        const btn = document.getElementById(`fam-btn-${k}`);
+        if (btn) btn.classList.remove("opacity-30", "pointer-events-none");
+        const slot = document.getElementById(`slot-${k}-content`);
+        if (slot) {
+          slot.textContent = "(Бос)";
+          slot.className = "text-xs text-gray-400 font-bold";
+        }
+      });
+
+      switchCreativeGameTab(1);
+    }
+
+    // ===================================================================
+    // MODULE 4: SOCIAL-EMOTIONAL SKILLS
+    // ===================================================================
+    function switchSocialGameTab(tabIndex) {
+      document.querySelectorAll(".social-panel").forEach(panel => panel.classList.add("hidden"));
+      
+      const p1 = document.getElementById("social-1-panel");
+      const p2 = document.getElementById("social-2-panel");
+      const p3 = document.getElementById("social-3-panel");
+
+      const t1 = document.getElementById("social-tab-1");
+      const t2 = document.getElementById("social-tab-2");
+      const t3 = document.getElementById("social-tab-3");
+
+      [t1, t2, t3].forEach((t, idx) => {
+        if (idx + 1 === tabIndex) {
+          t.className = "py-2.5 px-2 rounded-2xl bg-teal-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-teal-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        } else {
+          t.className = "py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        }
+      });
+
+      if (tabIndex === 1) p1.classList.remove("hidden");
+      if (tabIndex === 2) p2.classList.remove("hidden");
+      if (tabIndex === 3) p3.classList.remove("hidden");
+    }
+
+    function checkEmotionAnswer(emotion) {
+      if (emotion === 'happy') {
+        playGameAudio("audio/correct.mp3", "audio/applause.mp3");
+        showNotification("ДҰРЫС! 🎂 Аю туған күнде ӨТЕ ҚУАНЫШТЫ болды! 😊");
+        
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        setTimeout(() => {
+          document.getElementById("s1-instruction").textContent = "2-Кезең: Ашуланған Аюды сабасына түсіруге көмектесіңіз!";
+          document.getElementById("emo-cards-container").classList.add("hidden");
+          document.getElementById("emo-story-text").textContent = "«Аюдың сүйікті ойыншығы сынып қалды... 😡»";
+          document.getElementById("emo-regulation-box").classList.remove("hidden");
+        }, 1200);
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Қайтадан ойланып көр! Сыйлық пен шар алғанда қандай сезім болады? 😊");
+      }
+    }
+
+    function startBreathingExercise() {
+      playGameAudio("audio/breathe_in.mp3", "audio/correct.mp3");
+      const circle = document.getElementById("breath-circle");
+      circle.textContent = "🌬️ Терең дем ал...";
+      circle.classList.add("scale-125", "bg-emerald-400");
+
+      setTimeout(() => {
+        circle.textContent = "💨 Дем шығар...";
+        circle.classList.remove("scale-125");
+        circle.classList.add("scale-90");
+
+        setTimeout(() => {
+          circle.textContent = "😊 Аю басылды!";
+          circle.className = "w-24 h-24 mx-auto rounded-full bg-emerald-300 border-4 border-white shadow-lg flex items-center justify-center text-emerald-900 font-extrabold text-xs transition-all duration-500 animate-bounce";
+          
+          showNotification("Жарайсың! Терең дем алу ашуды басуға көмектесті! ⭐ (+5 Жұлдызша)");
+          let currentStars = parseInt(starCountEl.textContent);
+          starCountEl.textContent = currentStars + 5;
+
+          setTimeout(() => switchSocialGameTab(2), 1500);
+        }, 1500);
+      }, 1500);
+    }
+
+    // ТҮЗЕТІЛГЕН: Аюды тыныштандыратын нәзік әуен
+    function listenCalmMusic() {
+      playCalmMusicTone();
+      const calmAudio = new Audio("audio/calm_music.mp3");
+      calmAudio.play().catch(e => {});
+
+      showNotification("🎶 Сабырлы, жайлы әуен Аюдың көңілін тыныштандырды! 😊");
+      
+      let currentStars = parseInt(starCountEl.textContent);
+      starCountEl.textContent = currentStars + 5;
+
+      setTimeout(() => switchSocialGameTab(2), 2200);
+    }
+
+    let selectedAction = null;
+    let sortedActionsCount = 0;
+
+    function selectMagicWord(word, isCorrect) {
+      if (isCorrect) {
+        playGameAudio("audio/magic_word_thanks.mp3", "audio/correct.mp3");
+        document.getElementById("magic-word-slot").textContent = `✨ «${word}» (Өте дұрыс!)`;
+        showNotification("ДҰРЫС! Сыйлық алғанда «РАХМЕТ» деп айтамыз! 💖");
+
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        setTimeout(() => {
+          document.getElementById("s2-step-label").textContent = "2-Қадам: Әрекеттерді Жақсы немесе Жаман тақтаға сұрыптаңыз!";
+          document.getElementById("action-sorting-box").classList.remove("hidden");
+        }, 1200);
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Бұл жағдайға басқа сиқырлы сөз сәйкес келеді. Қайтадан байқап көр! 😊");
+      }
+    }
+
+    function selectActionItem(id, category, label) {
+      playSoftClick();
+      document.querySelectorAll("#action-items-pool button").forEach(b => b.classList.remove("ring-4", "ring-teal-400"));
+
+      const btn = document.getElementById(`act-btn-${id}`);
+      if (btn) {
+        btn.classList.add("ring-4", "ring-teal-400");
+        selectedAction = { id: id, category: category, label: label, element: btn };
+      }
+    }
+
+    function handleBoardClick(targetBoard) {
+      if (!selectedAction) {
+        showNotification("Алдымен төмендегі әрекет карточкасын таңдаңыз!");
+        return;
+      }
+
+      if (selectedAction.category === targetBoard) {
+        playGameAudio("audio/correct.mp3");
+        const list = document.getElementById(`${targetBoard}-actions-list`);
+        
+        selectedAction.element.classList.remove("ring-4", "ring-teal-400");
+        selectedAction.element.className = "p-1.5 bg-white rounded-xl border text-[10px] font-bold text-slate-800 animate-springBounce";
+        list.appendChild(selectedAction.element);
+
+        selectedAction = null;
+        sortedActionsCount++;
+
+        if (sortedActionsCount >= 3) {
+          playGameAudio("audio/win.mp3", "audio/correct.mp3");
+          showNotification("ЖАРАЙСЫҢ! Жақсы мен жаман әрекеттерді дұрыс айырдың! ⭐");
+
+          let currentStars = parseInt(starCountEl.textContent);
+          starCountEl.textContent = currentStars + 5;
+
+          setTimeout(() => switchSocialGameTab(3), 1500);
+        }
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Қате! Бұл әрекет қай тақтаға сәйкес келеді? Қайта ойлан! 😊");
+      }
+    }
+
+    let assembledPartsCount = 0;
+
+    function addShipPart(partId, partName) {
+      playSoftClick();
+      const btn = document.getElementById(`part-btn-${partId}`);
+      if (btn) btn.classList.add("opacity-30", "pointer-events-none");
+
+      assembledPartsCount++;
+      document.getElementById("ship-parts-status").textContent = `${assembledPartsCount} / 3 Бөлшек жиналды`;
+
+      const shipImg = document.getElementById("ship-frame-img");
+      if (assembledPartsCount === 1) shipImg.className = "w-56 h-36 object-contain opacity-60 transition-all duration-500";
+      if (assembledPartsCount === 2) shipImg.className = "w-56 h-36 object-contain opacity-85 transition-all duration-500";
+      if (assembledPartsCount === 3) {
+        shipImg.className = "w-56 h-36 object-contain opacity-100 transition-all duration-500 scale-105";
+        playGameAudio("audio/win.mp3");
+        
+        setTimeout(() => {
+          document.getElementById("s3-prompt").textContent = "2-Қадам: Достық шешімді таңдаңыз!";
+          document.getElementById("conflict-box").classList.remove("hidden");
+        }, 1000);
+      }
+    }
+
+    function resolveConflict(choice) {
+      if (choice === 'correct') {
+        playGameAudio("audio/friendship_song.mp3", "audio/win.mp3");
+        showNotification("ӨТЕ ДҰРЫС! Достар сыйластықта бәрін КЕЗЕКПЕН ЖӘНЕ БІРГЕ ойнайды! 🤝✨");
+
+        let currentStars = parseInt(starCountEl.textContent);
+        starCountEl.textContent = currentStars + 5;
+
+        setTimeout(() => {
+          document.querySelectorAll(".social-panel").forEach(p => p.classList.add("hidden"));
+          document.getElementById("social-complete-panel").classList.remove("hidden");
+        }, 1500);
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Араздасу жақсы емес! Достық шешімді таңдап көр! 😊");
+      }
+    }
+
+    function restartSocialGameModule() {
+      sortedActionsCount = 0;
+      assembledPartsCount = 0;
+      selectedAction = null;
+
+      document.getElementById("social-complete-panel").classList.add("hidden");
+      document.getElementById("emo-cards-container").classList.remove("hidden");
+      document.getElementById("emo-regulation-box").classList.add("hidden");
+      document.getElementById("action-sorting-box").classList.add("hidden");
+      document.getElementById("conflict-box").classList.add("hidden");
+      
+      document.getElementById("s1-instruction").textContent = "1-Кезең: Оқиғаны тыңдап, Аюдың сезіміне сәйкес эмоция карточкасын таңдаңыз!";
+      document.getElementById("emo-story-text").textContent = "«Аюдың туған күніне достары сыйлық пен шар алып келді!»";
+      document.getElementById("magic-word-slot").textContent = "Сөз таңдалмады...";
+      document.getElementById("s2-step-label").textContent = "1-Қадам: Жағдаятқа сәйкес сиқырлы сөзді таңдаңыз!";
+      document.getElementById("s3-prompt").textContent = "1-Қадам: Достардың қолындағы бөлшектерді біріктіріп, ортақ кемені құрастырыңыз!";
+      document.getElementById("ship-parts-status").textContent = "0 / 3 Бөлшек жиналды";
+
+      for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById(`part-btn-${i}`);
+        if (btn) btn.classList.remove("opacity-30", "pointer-events-none");
+      }
+
+      switchSocialGameTab(1);
+    }
+
+    // ===================================================================
+    // DOM LOAD INITIALIZATION
+    // ===================================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      audio = document.getElementById("main-audio-player");
+      playPauseBtn = document.getElementById("play-pause-btn");
+      playIcon = document.getElementById("play-icon");
+      prevBtn = document.getElementById("prev-btn");
+      nextBtn = document.getElementById("next-btn");
+      trackTitle = document.getElementById("player-track-title");
+      trackStatus = document.getElementById("player-track-status");
+      seekBar = document.getElementById("seek-bar");
+      volumeBar = document.getElementById("volume-bar");
+      currentTimeEl = document.getElementById("current-time");
+      durationTimeEl = document.getElementById("duration-time");
+      equalizerBars = document.getElementById("equalizer-bars");
+      volumeIcon = document.getElementById("volume-icon");
+      starCountEl = document.getElementById("star-count");
+
+      if (playPauseBtn) playPauseBtn.addEventListener("click", togglePlay);
+
+      if (prevBtn) {
+        prevBtn.addEventListener("click", () => {
+          currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+          loadTrack(currentTrackIndex);
+          togglePlay();
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+          currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+          loadTrack(currentTrackIndex);
+          togglePlay();
+        });
+      }
+
+      if (audio) {
+        audio.addEventListener("timeupdate", () => {
+          if (audio.duration) {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            seekBar.value = progress;
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+            durationTimeEl.textContent = formatTime(audio.duration);
+          }
+        });
+      }
+
+      if (seekBar) {
+        seekBar.addEventListener("input", () => {
+          if (audio && audio.duration) {
+            audio.currentTime = (seekBar.value / 100) * audio.duration;
+          }
+        });
+      }
+
+      if (volumeBar) {
+        volumeBar.addEventListener("input", () => {
+          if (!audio) return;
+          audio.volume = volumeBar.value / 100;
+          if (audio.volume === 0) {
+            volumeIcon.className = "fa-solid fa-volume-xmark text-[10px] text-red-500 cursor-pointer";
+          } else if (audio.volume < 0.5) {
+            volumeIcon.className = "fa-solid fa-volume-low text-[10px] text-orange-500 cursor-pointer";
+          } else {
+            volumeIcon.className = "fa-solid fa-volume-high text-[10px] text-orange-500 cursor-pointer";
+          }
+        });
+      }
+
+      document.querySelectorAll(".music-card").forEach((card, index) => {
+        card.addEventListener("click", () => {
+          loadTrack(index);
+          togglePlay();
+        });
+      });
+
+      const rewardBtn = document.getElementById("video-reward-btn");
+      if (rewardBtn) {
+        rewardBtn.addEventListener("click", () => {
+          let currentStars = parseInt(starCountEl.textContent);
+          starCountEl.textContent = currentStars + 5;
+          showNotification("Жарайсың! +5 Жұлдызша ұтып алдың! ⭐");
+        });
+      }
+
+      const mascotBtn = document.getElementById("mascot-btn");
+      const mascotBubble = document.getElementById("mascot-bubble");
+      if (mascotBtn && mascotBubble) {
+        mascotBtn.addEventListener("click", () => {
+          mascotBubble.classList.toggle("hidden");
+        });
+      }
+
+      loadTrack(0);
+      initCog1Level(0);
+    });
+  </script>
+</body>
+</html>
