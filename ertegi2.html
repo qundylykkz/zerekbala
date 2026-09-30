@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>«Үйшік» ертегісі – Көлеңкені тап!</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      margin: 0;
+      padding: 15px;
+      font-family: 'Comic Sans MS', 'Segoe UI', cursive, sans-serif;
+      background: linear-gradient(180deg, #ecfdf5 0%, #a7f3d0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-box {
+      background: #ffffff;
+      padding: 12px 25px;
+      border-radius: 25px;
+      box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);
+      text-align: center;
+      border: 3px solid #10b981;
+      max-width: 650px;
+      width: 100%;
+    }
+    h1 {
+      margin: 0;
+      font-size: 20pt;
+      color: #047857;
+    }
+    .instruction {
+      font-size: 13pt;
+      color: #334155;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    /* Ойын алаңы */
+    .game-board {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card {
+      width: 110px;
+      height: 110px;
+      background: #ffffff;
+      border: 4px solid #cbd5e1;
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card-icon {
+      font-size: 48pt;
+      line-height: 1;
+    }
+
+    /* Сол жақ: Аңдар */
+    .animal-card.selected {
+      border-color: #10b981;
+      background: #d1fae5;
+      transform: scale(1.08);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    }
+    .animal-card.done {
+      opacity: 0.3;
+      pointer-events: none;
+      filter: grayscale(0.5);
+    }
+
+    /* Ортадағы Үйшік */
+    .house-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border: 4px dashed #059669;
+      border-radius: 30px;
+      padding: 15px;
+      width: 140px;
+      height: 160px;
+    }
+    .house-icon {
+      font-size: 65pt;
+      line-height: 1;
+      animation: pulse 2s infinite alternate;
+    }
+    .house-title {
+      font-size: 13pt;
+      font-weight: bold;
+      color: #065f46;
+      margin-top: 5px;
+    }
+
+    /* Оң жақ: Көлеңкелер (Қара сұлба) */
+    .shadow-card .card-icon {
+      filter: brightness(0) opacity(0.85); /* Көлеңке эффектісі */
+    }
+    .shadow-card.done {
+      border-color: #10b981;
+      background: #ecfdf5;
+      pointer-events: none;
+    }
+    .shadow-card.done .card-icon {
+      filter: none !important; /* Дұрыс тапқанда түсі шығады */
+      animation: popIn 0.4s ease;
+    }
+
+    /* Қате таңдау дірілі */
+    .shake {
+      animation: shakeAnim 0.4s ease;
+      border-color: #ef4444 !important;
+      background: #fee2e2 !important;
+    }
+
+    /* Жеңіс терезесі */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.65);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .win-card {
+      background: white;
+      border-radius: 30px;
+      padding: 30px;
+      text-align: center;
+      border: 6px solid #10b981;
+      max-width: 450px;
+      width: 90%;
+      animation: popIn 0.5s ease;
+    }
+    .win-btn {
+      background: #10b981;
+      color: white;
+      font-size: 14pt;
+      font-weight: bold;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .win-btn:hover { background: #059669; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.06); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-box">
+    <h1>🏡 «Үйшік» ертегісі</h1>
+    <div class="instruction">Аңды таңдап, оның көлеңкесін тап!</div>
+  </div>
+
+  <div class="game-board">
+    <!-- Сол жақ: Аңдар тізімі -->
+    <div class="column" id="animalsCol"></div>
+
+    <!-- Ортасы: Үйшік -->
+    <div class="house-box">
+      <div class="house-icon">🏡</div>
+      <div class="house-title">Үйшік</div>
+    </div>
+
+    <!-- Оң жақ: Көлеңкелер тізімі (аралас) -->
+    <div class="column" id="shadowsCol"></div>
+  </div>
+
+  <!-- Жеңіс модальдық терезесі -->
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-card">
+      <div style="font-size: 60pt;">🎉 🏡 🦊 🐰</div>
+      <h2 style="color: #047857; margin: 10px 0;">ЖАРАЙСЫҢ, ТАПҚЫР БАЛАҚАЙ!</h2>
+      <p style="font-size: 13pt; color: #475569; line-height: 1.4;">
+        Барлық аңдар өз көлеңкесін тауып, үйшікке кірді!<br>
+        <b>Олар тату-тәтті өмір сүріпті!</b>
+      </p>
+      <button class="win-btn" onclick="initGame()">Қайта ойнау 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    const gameData = [
+      { id: "mouse", name: "Тышқан", icon: "🐭" },
+      { id: "frog", name: "Бақа", icon: "🐸" },
+      { id: "hare", name: "Қоян", icon: "🐰" },
+      { id: "fox", name: "Түлкі", icon: "🦊" }
+    ];
+
+    let selectedAnimal = null;
+    let matchesFound = 0;
+
+    // Қазақша дыбыстау
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'kk-KZ';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function initGame() {
+      selectedAnimal = null;
+      matchesFound = 0;
+      document.getElementById('winOverlay').style.display = 'none';
+
+      const animalsCol = document.getElementById('animalsCol');
+      const shadowsCol = document.getElementById('shadowsCol');
+      animalsCol.innerHTML = '';
+      shadowsCol.innerHTML = '';
+
+      // Аңдарды шығару
+      gameData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card animal-card';
+        card.id = 'animal-' + item.id;
+        card.innerHTML = `<span class="card-icon">${item.icon}</span>`;
+        card.onclick = () => selectAnimal(item, card);
+        animalsCol.appendChild(card);
+      });
+
+      // Көлеңкелерді араластырып шығару
+      const shuffled = [...gameData].sort(() => Math.random() - 0.5);
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card shadow-card';
+        card.id = 'shadow-' + item.id;
+        card.innerHTML = `<span class="card-icon">${item.icon}</span>`;
+        card.onclick = () => matchShadow(item, card);
+        shadowsCol.appendChild(card);
+      });
+    }
+
+    function selectAnimal(item, element) {
+      document.querySelectorAll('.animal-card').forEach(c => c.classList.remove('selected'));
+      selectedAnimal = item;
+      element.classList.add('selected');
+      speakText(item.name);
+    }
+
+    function matchShadow(item, element) {
+      if (!selectedAnimal) {
+        speakText("Алдымен аңды таңда!");
+        return;
+      }
+
+      if (selectedAnimal.id === item.id) {
+        // Дұрыс сәйкестік
+        element.classList.add('done');
+        const animalCard = document.getElementById('animal-' + selectedAnimal.id);
+        animalCard.classList.remove('selected');
+        animalCard.classList.add('done');
+        
+        speakText("Дұрыс! " + item.name + " үйшікке кірді!");
+        selectedAnimal = null;
+        matchesFound++;
+
+        if (matchesFound === gameData.length) {
+          setTimeout(() => {
+            speakText("Алақай! Барлық аңдар үйшікке жиналды!");
+            document.getElementById('winOverlay').style.display = 'flex';
+          }, 600);
+        }
+      } else {
+        // Қате сәйкестік
+        element.classList.add('shake');
+        speakText("Бұл оның көлеңкесі емес!");
+        setTimeout(() => {
+          element.classList.remove('shake');
+        }, 400);
+      }
+    }
+
+    window.onload = initGame;
+  </script>
+</body>
+</html>

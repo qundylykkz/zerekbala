@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>«Шалқан» ертегісі – Интерактивті ойын</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      margin: 0;
+      padding: 15px;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #dcfce7 0%, #bbf7d0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-box {
+      background: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      box-shadow: 0 6px 15px rgba(22, 163, 74, 0.2);
+      text-align: center;
+      border: 3px solid #16a34a;
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      margin: 0;
+      font-size: 20pt;
+      color: #15803d;
+    }
+    .instruction {
+      font-size: 13pt;
+      color: #334155;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    /* Ойын алаңы */
+    .game-container {
+      width: 100%;
+      max-width: 850px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 15px 0;
+    }
+
+    /* Шалқан және тіркелген кейіпкерлер алаңы */
+    .chain-area {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      background: #f0fdf4;
+      border: 4px dashed #16a34a;
+      border-radius: 25px;
+      padding: 20px;
+      min-height: 140px;
+      width: 100%;
+      overflow-x: auto;
+    }
+    .turnip-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: bounce 2s infinite alternate;
+      cursor: pointer;
+    }
+    .turnip-icon {
+      font-size: 60pt;
+      line-height: 1;
+    }
+    .turnip-title {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #b45309;
+    }
+
+    /* Кейіпкерлер картасы */
+    .card-slot {
+      width: 90px;
+      height: 110px;
+      background: white;
+      border: 2px solid #86efac;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      animation: popIn 0.3s ease;
+      flex-shrink: 0;
+    }
+    .slot-icon { font-size: 40pt; line-height: 1; }
+    .slot-num {
+      margin-top: 4px;
+      font-size: 10pt;
+      font-weight: bold;
+      color: #15803d;
+      background: #dcfce7;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Төменгі таңдау батырмалары */
+    .choices-box {
+      background: white;
+      border: 3px solid #f59e0b;
+      border-radius: 25px;
+      padding: 15px;
+      width: 100%;
+      box-shadow: 0 6px 15px rgba(245, 158, 11, 0.2);
+    }
+    .choices-title {
+      text-align: center;
+      font-size: 12pt;
+      font-weight: bold;
+      color: #b45309;
+      margin-bottom: 12px;
+    }
+    .characters-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    .char-btn {
+      width: 95px;
+      height: 105px;
+      background: #fffbeb;
+      border: 3px solid #fcd34d;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+    }
+    .char-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      border-color: #f59e0b;
+      background: #fef3c7;
+    }
+    .char-btn:active {
+      transform: scale(0.95);
+    }
+    .char-btn.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+      filter: grayscale(1);
+    }
+    .char-icon { font-size: 42pt; line-height: 1; }
+    .char-name {
+      font-size: 10pt;
+      font-weight: bold;
+      color: #78350f;
+      margin-top: 4px;
+    }
+
+    /* Қате басқандағы діріл */
+    .shake {
+      animation: shakeAnim 0.4s ease;
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+    }
+
+    /* Аяқталу блогы */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.65);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .win-card {
+      background: white;
+      border-radius: 30px;
+      padding: 30px;
+      text-align: center;
+      border: 6px solid #16a34a;
+      max-width: 450px;
+      width: 90%;
+      animation: popIn 0.5s ease;
+    }
+    .win-btn {
+      background: #16a34a;
+      color: white;
+      font-size: 14pt;
+      font-weight: bold;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .win-btn:hover { background: #15803d; }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-box">
+    <h1>🌱 «Шалқан» ертегісі</h1>
+    <div class="instruction">Шалқанды тартып алуға кім көмекке келді? Ретімен бас!</div>
+  </div>
+
+  <div class="game-container">
+    <!-- Тізбек (Шалқан және оның артындағылар) -->
+    <div class="chain-area" id="chainArea">
+      <div class="turnip-box">
+        <div class="turnip-icon">🪴</div>
+        <div class="turnip-title">Шалқан</div>
+      </div>
+      <!-- Таңдалғандар осы жерге қосылады -->
+    </div>
+
+    <!-- Төменгі кейіпкерлер таңдауы (Аралас тұр) -->
+    <div class="choices-box">
+      <div class="choices-title">👇 Кім келді? Таңда:</div>
+      <div class="characters-grid" id="choicesGrid"></div>
+    </div>
+  </div>
+
+  <!-- Жеңіс терезесі -->
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-card">
+      <div style="font-size: 60pt;">🎉 🪴 👏</div>
+      <h2 style="color: #15803d; margin: 10px 0;">ЖАРАЙСЫҢ, БАЛАҚАЙ!</h2>
+      <p style="font-size: 13pt; color: #475569; line-height: 1.4;">
+        Бәрі жабылып, үлкен шалқанды суырып алды!<br>
+        <b>«Бірлік болса — бәрін жеңуге болады!»</b>
+      </p>
+      <button class="win-btn" onclick="resetGame()">Қайта ойнау 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    // Ертегідегі нақты рет:
+    const storyOrder = [
+      { id: 1, name: "Ата", icon: "👴" },
+      { id: 2, name: "Әже", icon: "👵" },
+      { id: 3, name: "Немере", icon: "👧" },
+      { id: 4, name: "Күшік", icon: "🐶" },
+      { id: 5, name: "Мысық", icon: "🐱" },
+      { id: 6, name: "Тышқан", icon: "🐭" }
+    ];
+
+    let currentStep = 0;
+
+    // Дыбыстық синтезатор (қазақша дауыстап айту үшін)
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'kk-KZ';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function initGame() {
+      currentStep = 0;
+      const chainArea = document.getElementById('chainArea');
+      chainArea.innerHTML = `
+        <div class="turnip-box">
+          <div class="turnip-icon">🪴</div>
+          <div class="turnip-title">Шалқан</div>
+        </div>
+      `;
+
+      // Кейіпкерлерді араластырып шығару
+      const shuffled = [...storyOrder].sort(() => Math.random() - 0.5);
+      const grid = document.getElementById('choicesGrid');
+      grid.innerHTML = '';
+
+      shuffled.forEach(char => {
+        const btn = document.createElement('div');
+        btn.className = 'char-btn';
+        btn.id = 'char-' + char.id;
+        btn.innerHTML = `
+          <div class="char-icon">${char.icon}</div>
+          <div class="char-name">${char.name}</div>
+        `;
+        btn.onclick = () => handleChoice(char, btn);
+        grid.appendChild(btn);
+      });
+    }
+
+    function handleChoice(character, btnElement) {
+      const correctChar = storyOrder[currentStep];
+
+      if (character.id === correctChar.id) {
+        // Дұрыс тапты
+        currentStep++;
+        btnElement.classList.add('disabled');
+
+        // Тізбекке қосу
+        const chainArea = document.getElementById('chainArea');
+        const slot = document.createElement('div');
+        slot.className = 'card-slot';
+        slot.innerHTML = `
+          <div class="slot-icon">${character.icon}</div>
+          <div class="slot-num">${currentStep}-кезек</div>
+        `;
+        chainArea.appendChild(slot);
+
+        // Дауыспен айту
+        speakText(character.name + " келді!");
+
+        // Бәрі жиналса — жеңіс
+        if (currentStep === storyOrder.length) {
+          setTimeout(() => {
+            speakText("Алақай! Шалқанды тартып алды!");
+            document.getElementById('winOverlay').style.display = 'flex';
+          }, 600);
+        }
+      } else {
+        // Қате басса — дірілдеу
+        btnElement.classList.add('shake');
+        speakText("Қайта ойланшы!");
+        setTimeout(() => {
+          btnElement.classList.remove('shake');
+        }, 400);
+      }
+    }
+
+    function resetGame() {
+      document.getElementById('winOverlay').style.display = 'none';
+      initGame();
+    }
+
+    // Бастау
+    window.onload = initGame;
+  </script>
+</body>
+</html>
