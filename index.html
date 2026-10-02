@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZEREK BALA - Мектепалды Даярлық Интерактивті Платформасы</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Tailwind CSS Framework CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            bounceSlow: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.8', transform: 'scale(1)' },
+              '50%': { opacity: '1', transform: 'scale(1.03)' },
+            },
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(-4deg)' },
+              '50%': { transform: 'rotate(4deg)' },
+            },
+            springBounce: {
+              '0%': { transform: 'scale(0.3)', opacity: '0' },
+              '50%': { transform: 'scale(1.15)' },
+              '70%': { transform: 'scale(0.95)' },
+              '100%': { transform: 'scale(1)', opacity: '1' }
+            },
+            magicGlow: {
+              '0%, 100%': { boxShadow: '0 0 15px rgba(236, 72, 153, 0.6)', transform: 'scale(1)' },
+              '50%': { boxShadow: '0 0 35px rgba(168, 85, 247, 0.9)', transform: 'scale(1.05)' }
+            }
+          },
+          animation: {
+            float: 'float 4s ease-in-out infinite',
+            bounceSlow: 'bounceSlow 2.5s ease-in-out infinite',
+            pulseGlow: 'pulseGlow 3s ease-in-out infinite',
+            wiggle: 'wiggle 0.5s ease-in-out infinite',
+            springBounce: 'springBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+            magicGlow: 'magicGlow 2s ease-in-out infinite'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #e2e8f0;
+      border-radius: 10px;
+      height: 6px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.1s;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* =========================================================================
+       «Сиқырлы аралдағы піскен алмалар» - 100% PURE CSS ГРАФИКАСЫ
+       ========================================================================= */
+    .magic-island-stage {
+      position: relative;
+      width: 100%;
+      min-height: 540px;
+      height: auto;
+      border-radius: 2rem;
+      background: linear-gradient(180deg, #60a5fa 0%, #93c5fd 50%, #bae6fd 75%, #7dd3fc 100%);
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(14, 116, 144, 0.25), 0 15px 35px -5px rgba(0, 0, 0, 0.15);
+      border: 4px solid #fde047;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 15px;
+    }
+
+    .css-island-hill {
+      position: absolute;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 260px;
+      background: radial-gradient(circle at 50% 20%, #4ade80 0%, #22c55e 50%, #15803d 100%);
+      border-radius: 50% 50% 0 0;
+      box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.35);
+      z-index: 1;
+    }
+
+    .css-cloud {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50px;
+      opacity: 0.9;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      z-index: 2;
+    }
+    .css-cloud::before, .css-cloud::after {
+      content: '';
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+    .css-cloud-1 {
+      top: 25px;
+      left: 8%;
+      width: 85px;
+      height: 30px;
+      animation: floatCloud1 7s ease-in-out infinite alternate;
+    }
+    .css-cloud-1::before { width: 38px; height: 38px; top: -16px; left: 14px; }
+    .css-cloud-1::after { width: 28px; height: 28px; top: -10px; right: 10px; }
+
+    .css-cloud-2 {
+      top: 40px;
+      right: 10%;
+      width: 100px;
+      height: 35px;
+      animation: floatCloud2 9s ease-in-out infinite alternate;
+    }
+    .css-cloud-2::before { width: 45px; height: 45px; top: -20px; left: 18px; }
+    .css-cloud-2::after { width: 34px; height: 34px; top: -14px; right: 14px; }
+
+    @keyframes floatCloud1 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(25px); }
+    }
+    @keyframes floatCloud2 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-30px); }
+    }
+
+    .clouds-dancing .css-cloud-1 {
+      animation: danceCloud1 0.8s ease-in-out infinite alternate !important;
+    }
+    .clouds-dancing .css-cloud-2 {
+      animation: danceCloud2 0.8s ease-in-out infinite alternate !important;
+    }
+    @keyframes danceCloud1 {
+      0% { transform: translateY(0) rotate(-6deg) scale(1); }
+      100% { transform: translateY(-16px) rotate(6deg) scale(1.15); }
+    }
+    @keyframes danceCloud2 {
+      0% { transform: translateY(0) rotate(6deg) scale(1); }
+      100% { transform: translateY(-18px) rotate(-6deg) scale(1.18); }
+    }
+
+    .css-tree-wrapper {
+      position: relative;
+      margin: 15px auto 0 auto;
+      width: 320px;
+      height: 290px;
+      z-index: 5;
+    }
+
+    .css-tree-trunk {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 125px;
+      background: linear-gradient(90deg, #78350f 0%, #92400e 45%, #b45309 70%, #78350f 100%);
+      border-radius: 8px 8px 14px 14px;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4), 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+    .css-tree-trunk::after {
+      content: '';
+      position: absolute;
+      top: 25px;
+      left: 8px;
+      width: 26px;
+      height: 55px;
+      border-left: 3px solid rgba(254, 215, 170, 0.25);
+      border-radius: 40%;
+    }
+
+    .css-tree-crown {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 210px;
+      pointer-events: auto;
+    }
+    .css-leaf-ball {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #86efac 0%, #22c55e 50%, #166534 100%);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    .leaf-1 { width: 160px; height: 160px; top: 0; left: 70px; }
+    .leaf-2 { width: 140px; height: 140px; top: 35px; left: 5px; }
+    .leaf-3 { width: 145px; height: 145px; top: 30px; right: 5px; }
+    .leaf-4 { width: 120px; height: 120px; top: 80px; left: 40px; }
+    .leaf-5 { width: 125px; height: 125px; top: 75px; right: 35px; }
+
+    .css-apple {
+      position: absolute;
+      width: 30px;
+      height: 28px;
+      background: radial-gradient(circle at 35% 30%, #fca5a5 0%, #ef4444 45%, #b91c1c 90%);
+      border-radius: 50% 50% 45% 45%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.28), inset -2px -2px 4px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      z-index: 20;
+      transition: transform 0.18s ease-in-out, filter 0.18s;
+      pointer-events: auto;
+    }
+    .css-apple:hover {
+      transform: scale(1.25) !important;
+      filter: drop-shadow(0 0 7px #fde047);
+    }
+    .css-apple.selected-apple {
+      transform: scale(1.3) !important;
+      filter: drop-shadow(0 0 9px #eab308) drop-shadow(0 0 12px #ef4444);
+      animation: pulseGlow 1.2s infinite;
+    }
+    .css-apple::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 13px;
+      width: 3px;
+      height: 7px;
+      background: #78350f;
+      border-radius: 2px;
+      transform: rotate(-10deg);
+    }
+    .css-apple::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 15px;
+      width: 6px;
+      height: 4px;
+      background: #4ade80;
+      border-radius: 80% 0 80% 0;
+      transform: rotate(20deg);
+    }
+
+    .css-baskets-row {
+      position: relative;
+      z-index: 25;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 14px 6px 14px;
+      max-width: 100%;
+    }
+
+    .css-basket-item {
+      position: relative;
+      width: 78px;
+      height: 82px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .css-basket-item:hover {
+      transform: translateY(-4px) scale(1.05);
+    }
+    .css-basket-item.basket-full {
+      filter: drop-shadow(0 0 6px #22c55e);
+    }
+
+    .css-basket-handle-small {
+      position: absolute;
+      top: 4px;
+      left: 13px;
+      width: 52px;
+      height: 28px;
+      border: 4px solid #78350f;
+      border-bottom: none;
+      border-radius: 30px 30px 0 0;
+      pointer-events: none;
+    }
+    .css-basket-body-small {
+      position: absolute;
+      bottom: 12px;
+      width: 74px;
+      height: 48px;
+      background: repeating-linear-gradient(
+        45deg,
+        #b45309,
+        #b45309 5px,
+        #92400e 5px,
+        #92400e 10px
+      );
+      border-radius: 6px 6px 18px 18px;
+      border: 3px solid #78350f;
+      box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.35), 0 5px 12px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px;
+    }
+
+    .css-basket-num-tag {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #78350f;
+      font-weight: 900;
+      font-size: 13px;
+      line-height: 1;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      border: 1.5px solid #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      margin-top: 2px;
+    }
+
+    .css-basket-apples-view {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2px;
+      width: 100%;
+      min-height: 16px;
+    }
+    .basket-mini-apple {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ef4444;
+      border: 1px solid #ffffff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      display: inline-block;
+    }
+
+    .css-basket-counter-tag {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 9999px;
+      border: 1.5px solid #ffffff;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .basket-alert-bubble {
+      position: absolute;
+      top: -38px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      border: 2px solid #ffffff;
+      z-index: 60;
+      animation: springBounce 0.35s ease-out;
+      pointer-events: none;
+    }
+    .basket-alert-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px 6px 0;
+      border-style: solid;
+      border-color: #dc2626 transparent transparent transparent;
+    }
+
+    .basket-bounce {
+      animation: basketCatch 0.35s ease-out;
+    }
+    @keyframes basketCatch {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.18) rotate(4deg); }
+      75% { transform: scale(0.92) rotate(-3deg); }
+      100% { transform: scale(1); }
+    }
+
+    .magic-star-particle {
+      position: absolute;
+      pointer-events: none;
+      z-index: 50;
+      font-size: 22px;
+      animation: floatStar 1.8s ease-out forwards;
+    }
+    @keyframes floatStar {
+      0% {
+        transform: translate(0, 0) scale(0.3) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(1.4) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* =========================================================================
+       «Аюға жидек береміз» - 100% PURE CSS & INLINE SVG ГРАФИКАСЫ
+       ========================================================================= */
+    .forest-berry-stage {
+      position: relative;
+      width: 100%;
+      min-height: 480px;
+      border-radius: 2rem;
+      background: linear-gradient(180deg, #bbf7d0 0%, #86efac 40%, #4ade80 75%, #22c55e 100%);
+      overflow: hidden;
+      box-shadow: inset 0 0 35px rgba(21, 128, 61, 0.25), 0 12px 28px -5px rgba(0, 0, 0, 0.15);
+      border: 4px solid #84cc16;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 12px 20px 12px;
+    }
+
+    .bear-thought-cloud {
+      position: relative;
+      background: #ffffff;
+      border-radius: 40px;
+      padding: 10px 22px;
+      min-width: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+      border: 3px solid #fef08a;
+      z-index: 20;
+      animation: float 3.5s ease-in-out infinite;
+    }
+    .bear-thought-cloud::before {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 45%;
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 2px solid #fef08a;
+    }
+    .bear-thought-cloud::after {
+      content: '';
+      position: absolute;
+      bottom: -24px;
+      left: 40%;
+      width: 10px;
+      height: 10px;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 2px solid #fef08a;
+    }
+
+    .thought-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #f87171, #dc2626);
+      box-shadow: 0 2px 5px rgba(220, 38, 38, 0.4);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .thought-dot.active-eaten {
+      background: radial-gradient(circle at 35% 35%, #86efac, #16a34a) !important;
+      transform: scale(1.25);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8) !important;
+    }
+
+    .bear-character-wrapper {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      z-index: 10;
+      margin-top: 10px;
+    }
+
+    .bear-happy-dance {
+      animation: bearDance 0.7s ease-in-out infinite alternate !important;
+    }
+    @keyframes bearDance {
+      0% { transform: scale(1) rotate(-4deg); }
+      100% { transform: scale(1.08) rotate(4deg) translateY(-8px); }
+    }
+
+    .berry-tray {
+      position: relative;
+      z-index: 25;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 9999px;
+      border: 3px solid #bef264;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+      max-width: 90%;
+      min-height: 80px;
+    }
+
+    .single-berry {
+      cursor: pointer;
+      width: 48px;
+      height: 52px;
+      transition: transform 0.18s ease;
+      touch-action: manipulation;
+    }
+    .single-berry:hover {
+      transform: scale(1.2) translateY(-4px);
+    }
+    .single-berry:active {
+      transform: scale(0.95);
+    }
+    .single-berry.berry-hidden {
+      visibility: hidden;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="relative text-slate-800 pb-20">
+
+  <!-- Background decorative floating icons -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
+    <div class="absolute top-6 left-6 text-yellow-400 text-3xl sm:text-5xl animate-float"><i class="fa-solid fa-cloud"></i></div>
+    <div class="absolute top-36 left-1/4 text-pink-300 text-3xl sm:text-4xl animate-bounceSlow"><i class="fa-solid fa-star"></i></div>
+    <div class="absolute top-20 right-1/3 text-blue-300 text-4xl sm:text-6xl animate-float" style="animation-delay: 1s;"><i class="fa-solid fa-cloud"></i></div>
+    <div class="absolute bottom-20 left-8 text-purple-300 text-3xl sm:text-5xl animate-bounceSlow" style="animation-delay: 1.5s;"><i class="fa-solid fa-music"></i></div>
+    <div class="absolute bottom-10 right-10 text-green-300 text-4xl sm:text-6xl animate-float" style="animation-delay: 0.5s;"><i class="fa-solid fa-sun"></i></div>
+  </div>
+
+  <!-- Header with Author & Audio Player + Mini Playlist -->
+  <header class="relative z-10 w-full max-w-7xl mx-auto px-4 pt-4 sm:pt-6 pb-2">
+    <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+      
+      <!-- Stars Counter (Left) -->
+      <div class="bg-white/80 backdrop-blur-md px-4 py-2 sm:px-5 sm:py-2.5 rounded-full shadow-lg border-2 border-yellow-300 flex items-center gap-2.5 sm:gap-3 animate-pulseGlow">
+        <div class="bg-yellow-400 text-white p-1.5 sm:p-2 rounded-full w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-base sm:text-lg shadow-md">
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <div>
+          <span class="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider block">Жұлдызшалар</span>
+          <span id="star-count" class="text-lg sm:text-xl font-extrabold text-yellow-600">12</span>
+        </div>
+      </div>
+
+      <!-- Right Header Box: Author + Audio Player + Full 3 Tracks Playlist -->
+      <div class="w-full sm:w-80 ml-auto bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-3xl shadow-xl border-4 border-amber-200 space-y-3">
+        <div class="text-right border-b border-amber-100 pb-2">
+          <span class="text-[9px] sm:text-[10px] font-bold text-amber-500 uppercase tracking-widest block">Платформа авторы</span>
+          <h3 class="text-xs sm:text-sm font-black text-slate-700 flex items-center justify-end gap-1.5">
+            <i class="fa-solid fa-award text-yellow-500 text-xs"></i>
+            Отарова Әсел Сатыбалдықызы
+          </h3>
+        </div>
+
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-3 border-2 border-orange-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <div class="truncate mr-2">
+              <span id="player-track-title" class="text-[11px] sm:text-xs font-extrabold text-slate-800 block truncate">
+                🎶 Мен ауылға барамын
+              </span>
+              <span id="player-track-status" class="text-[9px] text-orange-600 font-semibold block">Тоқтатылды</span>
+            </div>
+
+            <div id="equalizer-bars" class="flex items-end gap-0.5 h-4 opacity-40 shrink-0">
+              <span class="w-1 bg-orange-400 rounded-full h-2"></span>
+              <span class="w-1 bg-amber-400 rounded-full h-4"></span>
+              <span class="w-1 bg-red-400 rounded-full h-1"></span>
+              <span class="w-1 bg-yellow-400 rounded-full h-3"></span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <span id="current-time" class="text-[9px] font-bold text-gray-500 min-w-[24px]">0:00</span>
+            <input type="range" id="seek-bar" value="0" max="100" class="w-full cursor-pointer accent-orange-500 h-1" />
+            <span id="duration-time" class="text-[9px] font-bold text-gray-500 min-w-[24px]">0:00</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-0.5">
+            <div class="flex items-center gap-1.5">
+              <button id="prev-btn" class="w-7 h-7 rounded-full bg-white shadow hover:bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] active:scale-90 transition">
+                <i class="fa-solid fa-backward-step"></i>
+              </button>
+              <button id="play-pause-btn" class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-400 to-pink-500 shadow text-white flex items-center justify-center text-xs hover:scale-105 active:scale-95 transition">
+                <i id="play-icon" class="fa-solid fa-play ml-0.5"></i>
+              </button>
+              <button id="next-btn" class="w-7 h-7 rounded-full bg-white shadow hover:bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] active:scale-90 transition">
+                <i class="fa-solid fa-forward-step"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1 bg-white/90 px-2 py-0.5 rounded-full shadow-inner border border-orange-100">
+              <i id="volume-icon" class="fa-solid fa-volume-high text-[10px] text-orange-500 cursor-pointer"></i>
+              <input type="range" id="volume-bar" value="80" max="100" class="w-10 h-1 accent-orange-500 cursor-pointer" />
+            </div>
+          </div>
+
+          <audio id="main-audio-player" src="audio/music1.mp3" preload="metadata"></audio>
+        </div>
+
+        <!-- Жоғарғы 3 әуен/күй тізімі (Қалпына келтірілді) -->
+        <div class="space-y-1.5 pt-1 border-t border-amber-100">
+          <div class="flex items-center justify-between px-1 mb-1">
+            <span class="text-[10px] font-extrabold text-amber-700 uppercase tracking-wide">Күйлер & Әндер тізімі</span>
+            <span class="text-[9px] text-gray-400 font-bold">3 әуен</span>
+          </div>
+
+          <!-- 1-Әуен -->
+          <div data-src="audio/music1.mp3" data-title="🎶 Мен ауылға барамын" class="music-card bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 p-2 rounded-xl border border-pink-200 flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 shadow-sm active:scale-98">
+            <div class="flex items-center gap-2 truncate mr-1">
+              <div class="w-6 h-6 rounded-lg bg-pink-400 text-white flex items-center justify-center font-black text-[10px] shadow shrink-0">1</div>
+              <div class="truncate">
+                <h4 class="font-bold text-slate-800 text-[11px] truncate">Мен ауылға барамын</h4>
+                <p class="text-[9px] text-gray-500 truncate">Балалар әні</p>
+              </div>
+            </div>
+            <button class="w-6 h-6 rounded-full bg-white text-pink-500 shadow flex items-center justify-center hover:bg-pink-500 hover:text-white transition shrink-0">
+              <i class="fa-solid fa-play text-[9px]"></i>
+            </button>
+          </div>
+
+          <!-- 2-Әуен -->
+          <div data-src="audio/music2.mp3" data-title="🎶 Адай күйі" class="music-card bg-gradient-to-r from-sky-50 to-blue-50 hover:from-sky-100 hover:to-blue-100 p-2 rounded-xl border border-sky-200 flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 shadow-sm active:scale-98">
+            <div class="flex items-center gap-2 truncate mr-1">
+              <div class="w-6 h-6 rounded-lg bg-sky-400 text-white flex items-center justify-center font-black text-[10px] shadow shrink-0">2</div>
+              <div class="truncate">
+                <h4 class="font-bold text-slate-800 text-[11px] truncate">Адай күйі</h4>
+                <p class="text-[9px] text-gray-500 truncate">Жігерлі домбыра</p>
+              </div>
+            </div>
+            <button class="w-6 h-6 rounded-full bg-white text-sky-500 shadow flex items-center justify-center hover:bg-sky-500 hover:text-white transition shrink-0">
+              <i class="fa-solid fa-play text-[9px]"></i>
+            </button>
+          </div>
+
+          <!-- 3-Әуен -->
+          <div data-src="audio/music3.mp3" data-title="🎶 Жаңбыр әні" class="music-card bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 p-2 rounded-xl border border-emerald-200 flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 shadow-sm active:scale-98">
+            <div class="flex items-center gap-2 truncate mr-1">
+              <div class="w-6 h-6 rounded-lg bg-emerald-400 text-white flex items-center justify-center font-black text-[10px] shadow shrink-0">3</div>
+              <div class="truncate">
+                <h4 class="font-bold text-slate-800 text-[11px] truncate">Жаңбыр әні</h4>
+                <p class="text-[9px] text-gray-500 truncate">Шаттық балалар әні</p>
+              </div>
+            </div>
+            <button class="w-6 h-6 rounded-full bg-white text-emerald-500 shadow flex items-center justify-center hover:bg-emerald-500 hover:text-white transition shrink-0">
+              <i class="fa-solid fa-play text-[9px]"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Logo & Title Section -->
+  <section class="relative z-10 text-center my-6 sm:my-10 px-4 max-w-5xl mx-auto">
+    <div class="inline-block relative max-w-full">
+      <div class="absolute -inset-4 bg-white/70 backdrop-blur-md rounded-full filter blur-md -z-10 animate-pulseGlow"></div>
+      <div class="flex justify-center items-center mb-4 sm:mb-6">
+        <div class="relative group">
+          <div class="absolute -inset-4 bg-gradient-to-r from-pink-400 via-amber-300 to-sky-400 rounded-full blur-2xl opacity-75 group-hover:opacity-100 transition duration-500 animate-pulse"></div>
+          <img 
+            id="main-platform-logo" 
+            src="logo.png" 
+            alt="ZEREK BALA Логотипі" 
+            style="width: 290px; max-width: 85vw; height: auto;"
+            onerror="this.onerror=null; this.src='image/logo.png'; this.onerror=function(){ this.parentElement.innerHTML='<div class=\'w-64 h-64 bg-white/90 rounded-full shadow-2xl border-4 border-amber-300 flex flex-col items-center justify-center p-4 text-center mx-auto animate-bounceSlow\'><span class=\'text-6xl\'>🌟</span><span class=\'text-sm font-black text-amber-600 mt-2 uppercase tracking-tight\'>logo.png</span></div>'; };" 
+            class="relative z-10 object-contain mx-auto drop-shadow-2xl transition transform group-hover:scale-105"
+          />
+        </div>
+      </div>
+
+      <h1 class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500 drop-shadow-xl select-none leading-none">
+        ZEREK BALA
+      </h1>
+      <h2 class="mt-2 sm:mt-4 text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-sky-600 drop-shadow-md select-none">
+        ойна, үйрен, дамы!
+      </h2>
+      <div class="mt-4 sm:mt-5 inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2.5 sm:px-8 sm:py-3 rounded-full shadow-lg text-xs sm:text-base font-extrabold uppercase tracking-wider">
+        <i class="fa-solid fa-shapes"></i> Ойын арқылы дамытуға арналған интерактивті платформа
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Interactive Body -->
+  <main class="relative z-10 max-w-5xl mx-auto px-4 space-y-12">
+    
+    <!-- Platform Introduction Video -->
+    <section class="bg-white/90 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-sky-200 space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-sky-100 pb-3">
+        <h2 class="text-xl sm:text-3xl font-black text-sky-600 flex items-center gap-2.5">
+          <i class="fa-solid fa-circle-play text-red-500 text-2xl sm:text-3xl"></i>
+          Платформа туралы
+        </h2>
+        <span class="bg-sky-100 text-sky-700 text-xs sm:text-sm font-bold px-3 py-1 rounded-full">
+          Ашылу сабағы
+        </span>
+      </div>
+
+      <div class="relative bg-slate-900 rounded-3xl overflow-hidden border-4 sm:border-8 border-amber-300 shadow-2xl">
+        <video id="intro-video" class="w-full aspect-video object-cover" controls poster="https://placehold.co/1280x720/38bdf8/ffffff?text=ZEREK+BALA">
+          <source src="video/ashylu.mp4" type="video/mp4" />
+          Сіздің браузеріңіз видеоны қолдамайды.
+        </video>
+      </div>
+
+      <div class="p-4 bg-amber-50 rounded-2xl border-2 border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="font-extrabold text-slate-800 text-sm sm:text-lg">"Zerek Bala" платформасының салтанатты ашылуы</h3>
+          <p class="text-xs sm:text-sm text-gray-600 mt-0.5">Видеоны толық тамашалап, біліміңді шыңда!</p>
+        </div>
+        <button id="video-reward-btn" class="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-900 font-extrabold text-xs sm:text-sm px-6 py-3 rounded-2xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2 shrink-0">
+          <i class="fa-solid fa-gift text-lg"></i> Сыйлық алу (+5 ⭐)
+        </button>
+      </div>
+    </section>
+
+    <!-- 1-МОДУЛЬ: КОММУНИКАТИВТІК ДАҒДЫ («Сөйлеймін және түсінемін») -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-purple-300 space-y-6">
+      <div class="text-center space-y-2 border-b-2 border-purple-100 pb-4">
+        <span class="inline-block bg-purple-100 text-purple-700 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          🎮 Дамытушы интерактивті ойындар (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 tracking-tight">
+          Сөйлеймін және түсінемін
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-purple-800 bg-purple-50 px-4 py-2 rounded-2xl border border-purple-200 inline-block">
+          Бағыты: КОММУНИКАТИВТІК ДАҒДЫ
+        </p>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 max-w-5xl mx-auto">
+        <button onclick="switchGameTab(1)" id="game-tab-1" class="py-3 px-3 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-black text-xs sm:text-sm text-center shadow-lg border-2 border-purple-300 transition-all flex items-center justify-center gap-2 hover:scale-102">
+          <i class="fa-solid fa-bolt text-yellow-300 text-base"></i>
+          <span>Жаңылтпаштар</span>
+        </button>
+        <button onclick="switchGameTab(2)" id="game-tab-2" class="py-3 px-3 rounded-2xl bg-slate-100 text-slate-700 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-200 transition-all flex items-center justify-center gap-2 hover:bg-slate-200">
+          <i class="fa-solid fa-book-open-reader text-purple-500 text-base"></i>
+          <span>Ертегілер</span>
+        </button>
+        <button onclick="switchGameTab(3)" id="game-tab-3" class="py-3 px-3 rounded-2xl bg-slate-100 text-slate-700 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-200 transition-all flex items-center justify-center gap-2 hover:bg-slate-200">
+          <i class="fa-solid fa-quote-left text-amber-500 text-base"></i>
+          <span>Мақалдар</span>
+        </button>
+        <button onclick="switchGameTab(4)" id="game-tab-4" class="py-3 px-3 rounded-2xl bg-slate-100 text-slate-700 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-200 transition-all flex items-center justify-center gap-2 hover:bg-slate-200">
+          <i class="fa-solid fa-lightbulb text-yellow-500 text-base"></i>
+          <span>Жұмбақтар</span>
+        </button>
+        <button onclick="switchGameTab(5)" id="game-tab-5" class="py-3 px-3 rounded-2xl bg-slate-100 text-slate-700 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-200 transition-all flex items-center justify-center gap-2 hover:bg-slate-200">
+          <i class="fa-solid fa-scroll text-rose-500 text-base"></i>
+          <span>Тақпақтар</span>
+        </button>
+      </div>
+
+      <div id="game-container" class="bg-gradient-to-b from-slate-50 to-purple-50/50 rounded-3xl p-4 sm:p-8 border-2 border-purple-100 relative min-h-[440px] flex flex-col justify-center">
+
+        <!-- 1: Жаңылтпаштар -->
+        <div id="game-1-panel" class="game-panel space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-purple-600 uppercase tracking-widest block">Сөйлеу мәнері & Тіл ұстарту</span>
+            <h3 class="text-2xl sm:text-3xl font-black text-purple-900">«Жаңылтпаштар»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Әр бейнежаңылтпашты тамашалап, тіліңді ширатып жылдам қайтала!
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl mx-auto pt-2">
+            <div onclick="openVideoModal('video/1.mp4', 'Жаңылтпаштар: 1-Бейнежаңылтпаш')" class="group relative bg-white p-4 rounded-3xl border-4 border-violet-200 hover:border-violet-500 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer flex flex-col justify-between text-left">
+              <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-gradient-to-tr from-indigo-900 via-purple-800 to-pink-600 flex items-center justify-center shadow-inner border-2 border-violet-300">
+                <div class="text-5xl group-hover:scale-125 transition transform duration-300 drop-shadow-lg select-none">🗣️</div>
+                <div class="absolute inset-0 bg-indigo-950/25 group-hover:bg-indigo-950/40 transition flex items-center justify-center">
+                  <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-400 via-orange-500 to-rose-500 text-white shadow-2xl flex items-center justify-center text-xl group-hover:scale-115 transition duration-300 ring-4 ring-white/60">
+                    <i class="fa-solid fa-play ml-1 drop-shadow"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3.5 space-y-1">
+                <span class="bg-violet-100 text-violet-800 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">⚡ Тіл ширату</span>
+                <h4 class="font-black text-sm sm:text-base text-slate-800">1-Бейнежаңылтпаш</h4>
+              </div>
+            </div>
+
+            <div onclick="openVideoModal('video/2.mp4', 'Жаңылтпаштар: 2-Бейнежаңылтпаш')" class="group relative bg-white p-4 rounded-3xl border-4 border-rose-200 hover:border-rose-500 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer flex flex-col justify-between text-left">
+              <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-gradient-to-tr from-rose-900 via-pink-700 to-amber-500 flex items-center justify-center shadow-inner border-2 border-rose-300">
+                <div class="text-5xl group-hover:scale-125 transition transform duration-300 drop-shadow-lg select-none">🦊</div>
+                <div class="absolute inset-0 bg-rose-950/25 group-hover:bg-rose-950/40 transition flex items-center justify-center">
+                  <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-500 via-rose-500 to-yellow-400 text-white shadow-2xl flex items-center justify-center text-xl group-hover:scale-115 transition duration-300 ring-4 ring-white/60">
+                    <i class="fa-solid fa-play ml-1 drop-shadow"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3.5 space-y-1">
+                <span class="bg-rose-100 text-rose-800 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">🌟 Тапқыр тіл</span>
+                <h4 class="font-black text-sm sm:text-base text-slate-800">2-Бейнежаңылтпаш</h4>
+              </div>
+            </div>
+
+            <div onclick="openVideoModal('video/3.mp4', 'Жаңылтпаштар: 3-Бейнежаңылтпаш')" class="group relative bg-white p-4 rounded-3xl border-4 border-amber-200 hover:border-amber-500 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer flex flex-col justify-between text-left">
+              <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-gradient-to-tr from-amber-900 via-orange-700 to-emerald-500 flex items-center justify-center shadow-inner border-2 border-amber-300">
+                <div class="text-5xl group-hover:scale-125 transition transform duration-300 drop-shadow-lg select-none">⚡</div>
+                <div class="absolute inset-0 bg-amber-950/25 group-hover:bg-amber-950/40 transition flex items-center justify-center">
+                  <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-400 via-orange-500 to-emerald-500 text-white shadow-2xl flex items-center justify-center text-xl group-hover:scale-115 transition duration-300 ring-4 ring-white/60">
+                    <i class="fa-solid fa-play ml-1 drop-shadow"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3.5 space-y-1">
+                <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">🚀 Жүйрік сөз</span>
+                <h4 class="font-black text-sm sm:text-base text-slate-800">3-Бейнежаңылтпаш</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2: Ертегілер -->
+        <div id="game-2-panel" class="game-panel hidden space-y-6 text-center">
+          <div class="max-w-md mx-auto">
+            <div onclick="openVideoModal('video/ertegi_video.mp4', 'Ертегі бейнесабағы: Ертегілер еліне саяхат')" class="group relative bg-white p-4 sm:p-5 rounded-3xl border-4 border-indigo-200 hover:border-indigo-500 shadow-xl transition cursor-pointer flex flex-col justify-between text-left">
+              <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-gradient-to-tr from-slate-900 via-indigo-900 to-purple-800 flex items-center justify-center shadow-inner border-2 border-indigo-300">
+                <div class="text-6xl select-none">🏰</div>
+                <div class="absolute inset-0 bg-indigo-950/20 flex items-center justify-center">
+                  <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 via-orange-500 to-pink-500 text-white shadow-2xl flex items-center justify-center text-2xl ring-4 ring-white/70">
+                    <i class="fa-solid fa-play ml-1"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3.5 space-y-1">
+                <span class="bg-indigo-100 text-indigo-800 text-[10px] font-black px-3 py-0.5 rounded-full uppercase">🎬 Бейне ертегі</span>
+                <h4 class="font-black text-base sm:text-lg text-slate-800">«Ертегілер еліне сиқырлы саяхат»</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
+            <a href="ertegi1.html" target="_blank" class="bg-white p-5 rounded-3xl border-4 border-indigo-200 hover:border-indigo-500 shadow-lg text-left block no-underline transition transform hover:-translate-y-1">
+              <div class="flex items-start justify-between">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-500 text-white flex items-center justify-center text-2xl shadow">🏰</div>
+                <span class="bg-indigo-100 text-indigo-800 text-[10px] font-black px-3 py-1 rounded-full uppercase">HTML Ойын</span>
+              </div>
+              <h4 class="text-base sm:text-lg font-black text-slate-800 mt-4">1-Ертегі ойыны</h4>
+              <p class="text-xs text-slate-600 font-bold mt-1">«Қызықты ертегі кейіпкерлері мен тапсырмалар әлемі»</p>
+            </a>
+            <a href="ertegi2.html" target="_blank" class="bg-white p-5 rounded-3xl border-4 border-pink-200 hover:border-pink-500 shadow-lg text-left block no-underline transition transform hover:-translate-y-1">
+              <div class="flex items-start justify-between">
+                <div class="w-14 h-14 rounded-2xl bg-pink-500 text-white flex items-center justify-center text-2xl shadow">🧚</div>
+                <span class="bg-pink-100 text-pink-800 text-[10px] font-black px-3 py-1 rounded-full uppercase">HTML Ойын</span>
+              </div>
+              <h4 class="text-base sm:text-lg font-black text-slate-800 mt-4">2-Ертегі ойыны</h4>
+              <p class="text-xs text-slate-600 font-bold mt-1">«Сиқырлы ертегі тапсырмалары мен интерактивті сұрақтар»</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3: Мақалдар -->
+        <div id="game-3-panel" class="game-panel hidden space-y-6 text-center">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 max-w-5xl mx-auto pt-2">
+            <div onclick="openVideoModal('video/Maqal1.mp4', '1-Мақал-мәтел')" class="bg-white p-3 rounded-3xl border-3 border-amber-200 hover:border-amber-500 shadow-md transition cursor-pointer text-left">
+              <div class="w-full aspect-video rounded-2xl bg-amber-700 flex items-center justify-center text-3xl">📜</div>
+              <div class="mt-2.5">
+                <span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2 py-0.5 rounded-full">1-Мақал</span>
+                <h4 class="font-extrabold text-xs text-slate-800">Maqal1.mp4</h4>
+              </div>
+            </div>
+            <div onclick="openVideoModal('video/Maqal2.mp4', '2-Мақал-мәтел')" class="bg-white p-3 rounded-3xl border-3 border-emerald-200 hover:border-emerald-500 shadow-md transition cursor-pointer text-left">
+              <div class="w-full aspect-video rounded-2xl bg-emerald-700 flex items-center justify-center text-3xl">🌱</div>
+              <div class="mt-2.5">
+                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-2 py-0.5 rounded-full">2-Мақал</span>
+                <h4 class="font-extrabold text-xs text-slate-800">Maqal2.mp4</h4>
+              </div>
+            </div>
+            <div onclick="openVideoModal('video/Maqal3.mp4', '3-Мақал-мәтел')" class="bg-white p-3 rounded-3xl border-3 border-sky-200 hover:border-sky-500 shadow-md transition cursor-pointer text-left">
+              <div class="w-full aspect-video rounded-2xl bg-sky-700 flex items-center justify-center text-3xl">💡</div>
+              <div class="mt-2.5">
+                <span class="bg-sky-100 text-sky-800 text-[9px] font-black px-2 py-0.5 rounded-full">3-Мақал</span>
+                <h4 class="font-extrabold text-xs text-slate-800">Maqal3.mp4</h4>
+              </div>
+            </div>
+            <div onclick="openVideoModal('video/Maqal4.mp4', '4-Мақал-мәтел')" class="bg-white p-3 rounded-3xl border-3 border-purple-200 hover:border-purple-500 shadow-md transition cursor-pointer text-left">
+              <div class="w-full aspect-video rounded-2xl bg-purple-700 flex items-center justify-center text-3xl">📚</div>
+              <div class="mt-2.5">
+                <span class="bg-purple-100 text-purple-800 text-[9px] font-black px-2 py-0.5 rounded-full">4-Мақал</span>
+                <h4 class="font-extrabold text-xs text-slate-800">Maqal4.mp4</h4>
+              </div>
+            </div>
+            <div onclick="openVideoModal('video/Maqal5.mp4', '5-Мақал-мәтел')" class="bg-white p-3 rounded-3xl border-3 border-rose-200 hover:border-rose-500 shadow-md transition cursor-pointer text-left col-span-2 sm:col-span-1">
+              <div class="w-full aspect-video rounded-2xl bg-rose-700 flex items-center justify-center text-3xl">🎯</div>
+              <div class="mt-2.5">
+                <span class="bg-rose-100 text-rose-800 text-[9px] font-black px-2 py-0.5 rounded-full">5-Мақал</span>
+                <h4 class="font-extrabold text-xs text-slate-800">Maqal5.mp4</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4: Жұмбақтар -->
+        <div id="game-4-panel" class="game-panel hidden space-y-6 text-center">
+          <div class="max-w-md mx-auto pt-2">
+            <a href="zhumbak.html" target="_blank" class="bg-gradient-to-tr from-amber-400 via-orange-500 to-pink-500 p-6 rounded-3xl shadow-xl hover:shadow-2xl transition block no-underline text-white border-4 border-amber-200 text-left">
+              <div class="flex items-start justify-between">
+                <div class="w-16 h-16 rounded-2xl bg-white text-orange-600 flex items-center justify-center text-3xl shadow-lg">🧩</div>
+                <span class="bg-white/20 px-3.5 py-1.5 rounded-full text-xs font-black">Интерактивті ойын</span>
+              </div>
+              <h4 class="text-xl sm:text-2xl font-black mt-4">«Суретті жұмбақтар әлемі»</h4>
+              <p class="text-xs text-white/90 font-bold mt-2">Табиғат, заттар және қоршаған орта туралы интерактивті дыбысты жұмбақтар жинағы!</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- 5: Тақпақтар -->
+        <div id="game-5-panel" class="game-panel hidden space-y-6 text-center">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <div class="p-4 bg-white rounded-3xl border-4 border-amber-300 shadow-lg flex flex-col justify-between">
+              <img src="image/taqpaq.jpeg" onerror="this.src='taqpaq.jpeg'" class="w-full h-auto max-h-[460px] object-contain rounded-xl mx-auto" />
+              <div class="mt-4 flex items-center justify-between">
+                <span class="font-black text-sm">1. «Ата» тақпағы</span>
+                <button onclick="playGameAudio('audio/taqpaq.mp3')" class="bg-amber-500 text-white font-extrabold text-xs px-4 py-2 rounded-full shadow">
+                  <i class="fa-solid fa-volume-high"></i> Тыңдау
+                </button>
+              </div>
+            </div>
+            <div class="p-4 bg-white rounded-3xl border-4 border-orange-300 shadow-lg flex flex-col justify-between">
+              <img src="image/taqpaq2.png" onerror="this.src='taqpaq2.png'" class="w-full h-auto max-h-[460px] object-contain rounded-xl mx-auto" />
+              <div class="mt-4 flex items-center justify-between">
+                <span class="font-black text-sm">2. «Алтын күз» мнемокартасы</span>
+                <button onclick="playGameAudio('audio/taqpaq2.mp3')" class="bg-orange-500 text-white font-extrabold text-xs px-4 py-2 rounded-full shadow">
+                  <i class="fa-solid fa-volume-high"></i> Тыңдау
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="pt-4 flex justify-center">
+            <button onclick="finishCommSkillsModule()" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-xs sm:text-sm px-8 py-3 rounded-2xl shadow-lg">
+              <i class="fa-solid fa-circle-check"></i> Бөлімді аяқтау (+15 ⭐)
+            </button>
+          </div>
+        </div>
+
+        <!-- Completion Panel -->
+        <div id="game-complete" class="game-panel hidden space-y-4 text-center py-6">
+          <div class="text-6xl animate-bounce">🏆</div>
+          <h3 class="text-2xl sm:text-4xl font-black text-amber-500">ЖАРАЙСЫҢ, БАЛАҚАЙ!</h3>
+          <p class="text-sm sm:text-base font-extrabold text-slate-700">«Сөйлеймін және түсінемін» бағыты сәтті аяқталды!</p>
+          <div class="text-yellow-500 text-3xl font-black">+15 ⭐ Жұлдызша ұтып алдың!</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2-МОДУЛЬ: ТАНЫМДЫҚ ЖӘНЕ ЗИЯТКЕРЛІК ДАҒДЫ («Ойлан! Салыстыр! Тап!») -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-amber-300 space-y-6">
+      <div class="text-center space-y-2 border-b-2 border-amber-100 pb-4">
+        <span class="inline-block bg-amber-100 text-amber-800 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          🧠 Зияткерлік & Логикалық ойындар (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-600 tracking-tight">
+          Ойлан! Салыстыр! Тап!
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-amber-900 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-200 inline-block">
+          ТАНЫМДЫҚ ЖӘНЕ ЗИЯТКЕРЛІК ДАҒДЫ
+        </p>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <button onclick="switchCogGameTab(1)" id="cog-tab-1" class="py-2.5 px-2 rounded-2xl bg-amber-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <i class="fa-solid fa-film text-xs"></i>
+          <span>1-5 Сандар әлемі</span>
+        </button>
+        <button onclick="switchCogGameTab(2)" id="cog-tab-2" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <i class="fa-solid fa-apple-whole text-xs"></i>
+          <span>Сиқырлы арал</span>
+        </button>
+        <button onclick="switchCogGameTab(3)" id="cog-tab-3" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+          <i class="fa-solid fa-paw text-xs"></i>
+          <span>Аюға жидек</span>
+        </button>
+      </div>
+
+      <div id="cog-game-container" class="bg-gradient-to-b from-amber-50/40 to-orange-50/50 rounded-3xl p-4 sm:p-8 border-2 border-amber-200 relative min-h-[460px] flex flex-col justify-center">
+
+        <!-- 1-ТАПСЫРМА: 1-5 САНДАР ӘЛЕМІ (5 ВИДЕО) -->
+        <div id="cog-1-panel" class="cog-panel space-y-6 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-amber-600 uppercase tracking-widest block">Математикалық ұғымдар & Санау</span>
+            <h3 class="text-2xl sm:text-3xl font-black text-amber-900">«Сандар әлемі»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Әр санның бейнесабағын тамашалап, сандарды тануды және дұрыс жазуды үйренейік!
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 max-w-5xl mx-auto pt-2">
+            <!-- 1 Саны -->
+            <div onclick="openVideoModal('video/san1.mp4', '1 саны - Бейнесабақ')" class="bg-white p-3 rounded-3xl border-3 border-rose-200 hover:border-rose-500 shadow-md transition cursor-pointer text-left">
+              <div class="relative w-full aspect-video rounded-2xl bg-rose-700 flex items-center justify-center text-4xl sm:text-5xl font-black text-white">1</div>
+              <div class="mt-2.5">
+                <span class="bg-rose-100 text-rose-800 text-[9px] font-black px-2 py-0.5 rounded-full">1 саны</span>
+                <h4 class="font-extrabold text-xs text-slate-800">«БІР» саны</h4>
+              </div>
+            </div>
+            <!-- 2 Саны -->
+            <div onclick="openVideoModal('video/san2.mp4', '2 саны - Бейнесабақ')" class="bg-white p-3 rounded-3xl border-3 border-amber-200 hover:border-amber-500 shadow-md transition cursor-pointer text-left">
+              <div class="relative w-full aspect-video rounded-2xl bg-amber-600 flex items-center justify-center text-4xl sm:text-5xl font-black text-white">2</div>
+              <div class="mt-2.5">
+                <span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2 py-0.5 rounded-full">2 саны</span>
+                <h4 class="font-extrabold text-xs text-slate-800">«ЕКІ» саны</h4>
+              </div>
+            </div>
+            <!-- 3 Саны -->
+            <div onclick="openVideoModal('video/san3.mp4', '3 саны - Бейнесабақ')" class="bg-white p-3 rounded-3xl border-3 border-emerald-200 hover:border-emerald-500 shadow-md transition cursor-pointer text-left">
+              <div class="relative w-full aspect-video rounded-2xl bg-emerald-700 flex items-center justify-center text-4xl sm:text-5xl font-black text-white">3</div>
+              <div class="mt-2.5">
+                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-2 py-0.5 rounded-full">3 саны</span>
+                <h4 class="font-extrabold text-xs text-slate-800">«ҮШ» саны</h4>
+              </div>
+            </div>
+            <!-- 4 Саны -->
+            <div onclick="openVideoModal('video/san4.mp4', '4 саны - Бейнесабақ')" class="bg-white p-3 rounded-3xl border-3 border-sky-200 hover:border-sky-500 shadow-md transition cursor-pointer text-left">
+              <div class="relative w-full aspect-video rounded-2xl bg-sky-600 flex items-center justify-center text-4xl sm:text-5xl font-black text-white">4</div>
+              <div class="mt-2.5">
+                <span class="bg-sky-100 text-sky-800 text-[9px] font-black px-2 py-0.5 rounded-full">4 саны</span>
+                <h4 class="font-extrabold text-xs text-slate-800">«ТӨРТ» саны</h4>
+              </div>
+            </div>
+            <!-- 5 Саны -->
+            <div onclick="openVideoModal('video/san5.mp4', '5 саны - Бейнесабақ')" class="bg-white p-3 rounded-3xl border-3 border-purple-200 hover:border-purple-500 shadow-md transition cursor-pointer text-left col-span-2 sm:col-span-1">
+              <div class="relative w-full aspect-video rounded-2xl bg-purple-700 flex items-center justify-center text-4xl sm:text-5xl font-black text-white">5</div>
+              <div class="mt-2.5">
+                <span class="bg-purple-100 text-purple-800 text-[9px] font-black px-2 py-0.5 rounded-full">5 саны</span>
+                <h4 class="font-extrabold text-xs text-slate-800">«БЕС» саны</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <button onclick="switchCogGameTab(2)" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-extrabold text-xs sm:text-sm px-7 py-3 rounded-2xl shadow-lg inline-flex items-center gap-2">
+              <span>Келесі: Сиқырлы арал ойыны</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2-ТАПСЫРМА: «СИҚЫРЛЫ АРАЛДАҒЫ ПІСКЕН АЛМАЛАР» (5 СЕБЕТ) -->
+        <div id="cog-2-panel" class="cog-panel hidden space-y-4 text-center">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-amber-600 uppercase tracking-widest block">Санау & Зияткерлік машық</span>
+            <h3 class="text-xl sm:text-3xl font-black text-amber-900">«Сиқырлы аралдағы піскен алмалар»</h3>
+            <div class="inline-block bg-white/95 px-5 py-2.5 rounded-2xl border-2 border-amber-300 shadow-md">
+              <p id="magic-apple-task-text" class="text-xs sm:text-sm font-black text-rose-600">
+                🍎 Алманы басып, нөмірі сәйкес себетке салыңыз! (1, 2, 3, 4, 5)
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center gap-2">
+            <button onclick="playAlmaTaskAudio()" class="bg-amber-500 text-white font-extrabold text-xs px-4 py-2 rounded-full shadow">
+              <i class="fa-solid fa-volume-high"></i> Тапсырманы тыңдау
+            </button>
+            <button onclick="startMagicIslandGame()" class="bg-slate-100 text-slate-700 font-extrabold text-xs px-4 py-2 rounded-full border border-slate-300 shadow">
+              <i class="fa-solid fa-rotate-right"></i> Қайта бастау
+            </button>
+          </div>
+
+          <div id="magic-island-stage" class="magic-island-stage mx-auto max-w-3xl">
+            <div id="cloud-left" class="css-cloud css-cloud-1"></div>
+            <div id="cloud-right" class="css-cloud css-cloud-2"></div>
+            <div class="css-island-hill"></div>
+
+            <div id="css-tree" class="css-tree-wrapper">
+              <div class="css-tree-crown">
+                <div class="css-leaf-ball leaf-1"></div>
+                <div class="css-leaf-ball leaf-2"></div>
+                <div class="css-leaf-ball leaf-3"></div>
+                <div class="css-leaf-ball leaf-4"></div>
+                <div class="css-leaf-ball leaf-5"></div>
+              </div>
+              <div class="css-tree-trunk"></div>
+              <div id="tree-apples-container" class="absolute inset-0 z-20 pointer-events-auto"></div>
+            </div>
+
+            <!-- 5 CSS Себет қатары -->
+            <div id="css-baskets-row" class="css-baskets-row">
+              <div id="basket-item-1" onclick="handleBasketClick(1)" class="css-basket-item">
+                <div class="css-basket-handle-small"></div>
+                <div class="css-basket-body-small">
+                  <span class="css-basket-num-tag">1</span>
+                  <div id="basket-view-1" class="css-basket-apples-view"></div>
+                </div>
+                <div class="css-basket-counter-tag"><span id="bcount-1">0</span>/1</div>
+              </div>
+
+              <div id="basket-item-2" onclick="handleBasketClick(2)" class="css-basket-item">
+                <div class="css-basket-handle-small"></div>
+                <div class="css-basket-body-small">
+                  <span class="css-basket-num-tag">2</span>
+                  <div id="basket-view-2" class="css-basket-apples-view"></div>
+                </div>
+                <div class="css-basket-counter-tag"><span id="bcount-2">0</span>/2</div>
+              </div>
+
+              <div id="basket-item-3" onclick="handleBasketClick(3)" class="css-basket-item">
+                <div class="css-basket-handle-small"></div>
+                <div class="css-basket-body-small">
+                  <span class="css-basket-num-tag">3</span>
+                  <div id="basket-view-3" class="css-basket-apples-view"></div>
+                </div>
+                <div class="css-basket-counter-tag"><span id="bcount-3">0</span>/3</div>
+              </div>
+
+              <div id="basket-item-4" onclick="handleBasketClick(4)" class="css-basket-item">
+                <div class="css-basket-handle-small"></div>
+                <div class="css-basket-body-small">
+                  <span class="css-basket-num-tag">4</span>
+                  <div id="basket-view-4" class="css-basket-apples-view"></div>
+                </div>
+                <div class="css-basket-counter-tag"><span id="bcount-4">0</span>/4</div>
+              </div>
+
+              <div id="basket-item-5" onclick="handleBasketClick(5)" class="css-basket-item">
+                <div class="css-basket-handle-small"></div>
+                <div class="css-basket-body-small">
+                  <span class="css-basket-num-tag">5</span>
+                  <div id="basket-view-5" class="css-basket-apples-view"></div>
+                </div>
+                <div class="css-basket-counter-tag"><span id="bcount-5">0</span>/5</div>
+              </div>
+            </div>
+
+            <!-- Жеңіс хабарламасы -->
+            <div id="apple-victory-box" class="hidden absolute inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-3">
+              <div class="text-6xl animate-bounce">🍎🧺🏆🌟</div>
+              <h4 class="text-2xl sm:text-3xl font-black text-emerald-600">ЖАРАЙСЫҢ, БАРЛЫҚ СЕБЕТ ТОЛДЫ!</h4>
+              <p class="text-sm font-extrabold text-slate-700">Сен барлық 5 себетке сандарына сай алмаларды дәл салып шықтың!</p>
+              <div class="text-yellow-500 text-2xl font-black">+15 ⭐ Жұлдызша ұтып алдың!</div>
+              <div class="flex gap-3 pt-2">
+                <button onclick="startMagicIslandGame()" class="bg-amber-500 text-white font-extrabold text-xs px-6 py-2.5 rounded-2xl shadow">Қайта ойнау</button>
+                <button onclick="switchCogGameTab(3)" class="bg-emerald-600 text-white font-black text-xs px-6 py-2.5 rounded-2xl shadow">Келесі: «Аюға жидек»</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-ТАПСЫРМА: «АЮҒА ЖИДЕК БЕРЕМІЗ» (ТҮСІНДІРМЕСІ, БАТЫРМАЛАРЫ ТОЛЫҚ) -->
+        <div id="cog-3-panel" class="cog-panel hidden space-y-4 text-center">
+          
+          <!-- Ойынның толық тақырыбы мен түсіндірме мәтіндері -->
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-amber-600 uppercase tracking-widest block">Қоректендіру & Санау машығы</span>
+            <h3 class="text-xl sm:text-3xl font-black text-amber-900">«Аюға жидек береміз»</h3>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto">
+              Аюдың ойлау бұлтындағы нүктелер санына қарап, дәл сондай мөлшерде жидек бер!
+            </p>
+            <!-- Динамикалық тапсырма жақтауы -->
+            <div class="inline-block bg-white/95 px-5 py-2.5 rounded-2xl border-2 border-emerald-300 shadow-md mt-1">
+              <p id="bear-task-text" class="text-xs sm:text-sm font-black text-emerald-700">
+                🍓 Аюға керекті мөлшерде жидек беріп, оны қуант!
+              </p>
+            </div>
+          </div>
+
+          <!-- «Тапсырманы тыңдау» және «Қайта бастау» батырмалары -->
+          <div class="flex items-center justify-center gap-2">
+            <button onclick="playBearTaskAudio()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-2 rounded-full shadow transition inline-flex items-center gap-2 active:scale-95">
+              <i class="fa-solid fa-volume-high"></i> Тапсырманы тыңдау
+            </button>
+            <button onclick="initBearBerryGame()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs px-4 py-2 rounded-full border border-slate-300 shadow-sm transition active:scale-95 inline-flex items-center gap-1.5">
+              <i class="fa-solid fa-rotate-right"></i> Қайта бастау
+            </button>
+          </div>
+
+          <!-- Негізгі сахна -->
+          <div id="forest-berry-stage" class="forest-berry-stage mx-auto max-w-2xl">
+            <!-- Ойлау бұлты (Thought bubble) -->
+            <div id="bear-thought-cloud" class="bear-thought-cloud"></div>
+
+            <!-- Аю кейіпкері (SVG) -->
+            <div id="bear-character" class="bear-character-wrapper">
+              <svg viewBox="0 0 200 200" width="100%" height="100%" class="drop-shadow-lg">
+                <circle cx="50" cy="50" r="26" fill="#8d4925" />
+                <circle cx="50" cy="50" r="15" fill="#fca5a5" />
+                <circle cx="150" cy="50" r="26" fill="#8d4925" />
+                <circle cx="150" cy="50" r="15" fill="#fca5a5" />
+
+                <ellipse cx="100" cy="180" rx="65" ry="45" fill="#78350f" />
+                <ellipse cx="100" cy="180" rx="42" ry="32" fill="#fed7aa" />
+                <ellipse cx="100" cy="105" rx="68" ry="60" fill="#8d4925" />
+                <ellipse cx="100" cy="120" rx="36" ry="28" fill="#fde68a" />
+
+                <g id="bear-eyes">
+                  <circle cx="78" cy="95" r="7" fill="#1e293b" />
+                  <circle cx="76" cy="93" r="2.5" fill="#ffffff" />
+                  <circle cx="122" cy="95" r="7" fill="#1e293b" />
+                  <circle cx="120" cy="93" r="2.5" fill="#ffffff" />
+                </g>
+
+                <ellipse cx="100" cy="115" rx="14" ry="9" fill="#1e293b" />
+                <path id="bear-mouth" d="M 90 126 Q 100 136 110 126" stroke="#1e293b" stroke-width="4" stroke-linecap="round" fill="none" />
+                <ellipse id="bear-mouth-open-shape" cx="100" cy="132" rx="10" ry="7" fill="#dc2626" class="hidden" />
+
+                <ellipse cx="65" cy="115" rx="10" ry="6" fill="#fca5a5" opacity="0.6" />
+                <ellipse cx="135" cy="115" rx="10" ry="6" fill="#fca5a5" opacity="0.6" />
+              </svg>
+            </div>
+
+            <!-- 5 Жидек сөресі -->
+            <div id="berry-tray" class="berry-tray">
+              <div onclick="feedBerry(1, event)" id="berry-1" class="single-berry">
+                <svg viewBox="0 0 100 110" width="100%" height="100%">
+                  <path d="M 50 20 C 40 5 30 15 50 30 C 70 15 60 5 50 20 Z" fill="#22c55e" />
+                  <path d="M 50 30 C 20 30 15 70 50 105 C 85 70 80 30 50 30 Z" fill="#ef4444" />
+                  <circle cx="40" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="60" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="50" cy="68" r="2.5" fill="#fef08a" />
+                </svg>
+              </div>
+              <div onclick="feedBerry(2, event)" id="berry-2" class="single-berry">
+                <svg viewBox="0 0 100 110" width="100%" height="100%">
+                  <path d="M 50 20 C 40 5 30 15 50 30 C 70 15 60 5 50 20 Z" fill="#22c55e" />
+                  <path d="M 50 30 C 20 30 15 70 50 105 C 85 70 80 30 50 30 Z" fill="#ef4444" />
+                  <circle cx="40" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="60" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="50" cy="68" r="2.5" fill="#fef08a" />
+                </svg>
+              </div>
+              <div onclick="feedBerry(3, event)" id="berry-3" class="single-berry">
+                <svg viewBox="0 0 100 110" width="100%" height="100%">
+                  <path d="M 50 20 C 40 5 30 15 50 30 C 70 15 60 5 50 20 Z" fill="#22c55e" />
+                  <path d="M 50 30 C 20 30 15 70 50 105 C 85 70 80 30 50 30 Z" fill="#ef4444" />
+                  <circle cx="40" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="60" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="50" cy="68" r="2.5" fill="#fef08a" />
+                </svg>
+              </div>
+              <div onclick="feedBerry(4, event)" id="berry-4" class="single-berry">
+                <svg viewBox="0 0 100 110" width="100%" height="100%">
+                  <path d="M 50 20 C 40 5 30 15 50 30 C 70 15 60 5 50 20 Z" fill="#22c55e" />
+                  <path d="M 50 30 C 20 30 15 70 50 105 C 85 70 80 30 50 30 Z" fill="#ef4444" />
+                  <circle cx="40" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="60" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="50" cy="68" r="2.5" fill="#fef08a" />
+                </svg>
+              </div>
+              <div onclick="feedBerry(5, event)" id="berry-5" class="single-berry">
+                <svg viewBox="0 0 100 110" width="100%" height="100%">
+                  <path d="M 50 20 C 40 5 30 15 50 30 C 70 15 60 5 50 20 Z" fill="#22c55e" />
+                  <path d="M 50 30 C 20 30 15 70 50 105 C 85 70 80 30 50 30 Z" fill="#ef4444" />
+                  <circle cx="40" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="60" cy="50" r="2.5" fill="#fef08a" />
+                  <circle cx="50" cy="68" r="2.5" fill="#fef08a" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center gap-3 pt-3">
+            <button onclick="switchCogGameTab(2)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow transition inline-flex items-center gap-2">
+              <i class="fa-solid fa-arrow-left"></i> Артқа
+            </button>
+            <button onclick="finishCogModuleDirect()" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-xs sm:text-sm px-7 py-2.5 rounded-2xl shadow-lg">
+              <i class="fa-solid fa-circle-check"></i> Бөлімді аяқтау (+15 ⭐)
+            </button>
+          </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="cog-complete-panel" class="cog-panel hidden space-y-4 text-center py-6">
+          <div class="text-6xl animate-bounce">🌟</div>
+          <h3 class="text-2xl sm:text-4xl font-black text-amber-600">КЕРЕМЕТ, АҚЫЛДЫ БАЛАҚАЙ!</h3>
+          <p class="text-sm font-extrabold text-slate-700">«Танымдық және зияткерлік дағды» бойынша барлық тапсырмалар сәтті орындалды!</p>
+          <div class="text-yellow-500 text-3xl font-black">+15 ⭐ Жұлдызша ұтып алдың!</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3-МОДУЛЬ: ШЫҒАРМАШЫЛЫҚ ДАҒДЫ («Қиялдаймын және жасаймын») -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-rose-300 space-y-6">
+      <div class="text-center space-y-2 border-b-2 border-rose-100 pb-4">
+        <span class="inline-block bg-rose-100 text-rose-800 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          🎨 Шығармашылық & Қиял ойындары (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-600 tracking-tight">
+          Қиялдаймын және жасаймын
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-rose-900 bg-rose-50 px-4 py-2 rounded-2xl border border-rose-200 inline-block">
+          Бағыты: ШЫҒАРМАШЫЛЫҚ ДАҒДЫ
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <button onclick="switchCreativeGameTab(1)" id="creative-tab-1" class="py-2.5 px-2 rounded-2xl bg-rose-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-rose-400">
+          <span>Уақыт машинасы</span>
+        </button>
+        <button onclick="switchCreativeGameTab(2)" id="creative-tab-2" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300">
+          <span>Бәйтерек & Отбасы</span>
+        </button>
+        <button onclick="switchCreativeGameTab(3)" id="creative-tab-3" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300">
+          <span>Ертегілер кеңістігі</span>
+        </button>
+      </div>
+
+      <div id="creative-game-container" class="bg-gradient-to-b from-rose-50/40 to-pink-50/50 rounded-3xl p-4 sm:p-8 border-2 border-rose-200 relative min-h-[480px] flex flex-col justify-center">
+
+        <!-- 1: Уақыт машинасы -->
+        <div id="creative-1-panel" class="creative-panel space-y-4 text-center">
+          <h3 class="text-xl sm:text-3xl font-black text-rose-900">«Уақыт машинасы: Өз болашағымды саламын»</h3>
+          <div class="flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
+            <button onclick="setPaintTemplate('school')" class="px-3 py-1 bg-white rounded-xl border border-rose-300 font-bold text-xs text-rose-800">🏫 Мектеп</button>
+            <button onclick="setPaintTemplate('space')" class="px-3 py-1 bg-white rounded-xl border border-rose-300 font-bold text-xs text-rose-800">🚀 Ғарышкер</button>
+            <button onclick="setPaintTemplate('doctor')" class="px-3 py-1 bg-white rounded-xl border border-rose-300 font-bold text-xs text-rose-800">🩺 Дәрігер</button>
+          </div>
+          <div class="relative max-w-xl mx-auto">
+            <canvas id="paint-canvas" width="500" height="260" class="w-full h-60 bg-white rounded-3xl border-4 border-rose-300 shadow cursor-crosshair"></canvas>
+          </div>
+          <div class="flex justify-center gap-2">
+            <button onclick="setPaintColor('#ef4444')" class="w-7 h-7 rounded-full bg-red-500"></button>
+            <button onclick="setPaintColor('#3b82f6')" class="w-7 h-7 rounded-full bg-blue-500"></button>
+            <button onclick="setPaintColor('#10b981')" class="w-7 h-7 rounded-full bg-emerald-500"></button>
+            <button onclick="clearPaintCanvas()" class="text-xs text-gray-500 underline ml-2">Тазалау</button>
+          </div>
+          <div>
+            <button onclick="switchCreativeGameTab(2)" class="bg-gradient-to-r from-rose-500 to-indigo-600 text-white font-extrabold text-xs sm:text-sm px-6 py-2.5 rounded-2xl shadow">Суретті аяқтау (+5 ⭐)</button>
+          </div>
+        </div>
+
+        <!-- 2: Бәйтерек -->
+        <div id="creative-2-panel" class="creative-panel hidden space-y-6 text-center">
+          <h3 class="text-xl sm:text-3xl font-black text-rose-900">«Бәйтерек: Жеті ата және отбасы ағашы»</h3>
+          <div class="relative w-full max-w-lg mx-auto min-h-[260px] bg-emerald-50/60 p-4 rounded-3xl border-2 border-emerald-200 flex flex-col items-center justify-between">
+            <div class="flex justify-around w-full">
+              <div onclick="placeFamilyMember('grandpa')" class="w-24 h-16 bg-white/90 border-2 border-dashed border-emerald-400 rounded-2xl flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-[9px] font-extrabold text-emerald-800">Ата</span>
+                <span id="slot-grandpa-content" class="text-xs text-gray-400">(Бос)</span>
+              </div>
+              <div onclick="placeFamilyMember('grandma')" class="w-24 h-16 bg-white/90 border-2 border-dashed border-emerald-400 rounded-2xl flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-[9px] font-extrabold text-emerald-800">Әже</span>
+                <span id="slot-grandma-content" class="text-xs text-gray-400">(Бос)</span>
+              </div>
+            </div>
+            <div id="family-members-pool" class="flex gap-3 pt-3">
+              <button id="fam-btn-grandpa" onclick="selectFamilyMember('grandpa')" class="p-2 bg-white rounded-xl border border-amber-300 font-bold text-xs">👴 Ата</button>
+              <button id="fam-btn-grandma" onclick="selectFamilyMember('grandma')" class="p-2 bg-white rounded-xl border border-rose-300 font-bold text-xs">👵 Әже</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3: Кеңістік -->
+        <div id="creative-3-panel" class="creative-panel hidden space-y-6 text-center">
+          <h3 class="text-xl sm:text-3xl font-black text-rose-900">«Ертегілер әлемі: Көлем және кеңістік»</h3>
+          <div id="fairy-scene-container" class="relative w-full max-w-xl mx-auto h-64 bg-sky-100 rounded-3xl border-4 border-indigo-200 overflow-hidden shadow-inner">
+            <div class="absolute left-6 bottom-4 w-28 h-28 bg-amber-200 rounded-2xl border-4 border-amber-600 flex items-center justify-center font-black">🏠 Үй</div>
+            <div class="absolute right-8 bottom-4 w-24 h-36 bg-emerald-300 rounded-t-full border-4 border-emerald-700 flex items-center justify-center font-black">🌳 Ағаш</div>
+            <div id="char-fox" class="absolute left-1/2 bottom-8 p-1 bg-white rounded-xl shadow">🦊 Түлкі</div>
+            <div id="char-bear" class="absolute right-1/3 bottom-8 p-1 bg-white rounded-xl shadow">🐻 Аю</div>
+          </div>
+          <div class="flex justify-center gap-3">
+            <button onclick="moveCharToSpace('fox', 'behind_tree')" class="px-4 py-2 bg-orange-500 text-white font-extrabold text-xs rounded-2xl shadow">🦊 Түлкі ағаш артына</button>
+            <button onclick="moveCharToSpace('bear', 'in_front_house')" class="px-4 py-2 bg-amber-600 text-white font-extrabold text-xs rounded-2xl shadow">🐻 Аю үй алдына</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4-МОДУЛЬ: ӘЛЕУМЕТТІК-ЭМОЦИОНАЛДЫҚ ДАҒДЫ («Сезінемін және қарым-қатынас жасаймын») -->
+    <section class="bg-white/95 backdrop-blur-md p-4 sm:p-8 rounded-3xl shadow-2xl border-4 border-teal-300 space-y-6">
+      <div class="text-center space-y-2 border-b-2 border-teal-100 pb-4">
+        <span class="inline-block bg-teal-100 text-teal-800 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          ❤️ Сезім & Қарым-қатынас ойындары (5-6 жас)
+        </span>
+        <h2 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-emerald-600 to-sky-600 tracking-tight">
+          Сезінемін және қарым-қатынас жасаймын
+        </h2>
+        <p class="text-xs sm:text-base font-extrabold text-teal-900 bg-teal-50 px-4 py-2 rounded-2xl border border-teal-200 inline-block">
+          Бағыты: ӘЛЕУМЕТТІК-ЭМОЦИОНАЛДЫҚ ДАҒДЫ
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto">
+        <button onclick="switchSocialGameTab(1)" id="social-tab-1" class="py-2.5 px-2 rounded-2xl bg-teal-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-teal-400">
+          <span>Эмоциялар айнасы</span>
+        </button>
+        <button onclick="switchSocialGameTab(2)" id="social-tab-2" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300">
+          <span>Әдептілік & Таңдау</span>
+        </button>
+        <button onclick="switchSocialGameTab(3)" id="social-tab-3" class="py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300">
+          <span>Топтық Дос-кеме</span>
+        </button>
+      </div>
+
+      <div id="social-game-container" class="bg-gradient-to-b from-teal-50/40 to-emerald-50/50 rounded-3xl p-4 sm:p-8 border-2 border-teal-200 relative min-h-[440px] flex flex-col justify-center">
+
+        <!-- 1: Эмоциялар -->
+        <div id="social-1-panel" class="social-panel space-y-4 text-center">
+          <h3 class="text-xl sm:text-3xl font-black text-teal-900">«Эмоциялар айнасы: Сезімді таны және түсін»</h3>
+          <p class="text-xs sm:text-sm font-bold text-slate-700 bg-teal-50 px-3 py-1.5 rounded-xl border border-teal-200 max-w-md mx-auto">
+            «Аюдың туған күніне достары сыйлық пен шар алып келді!»
+          </p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto pt-2">
+            <button onclick="checkEmotionAnswer('happy')" class="p-3 bg-white border-2 border-emerald-300 rounded-2xl shadow hover:scale-105 transition flex flex-col items-center">
+              <span class="text-3xl">😊</span>
+              <span class="text-xs font-extrabold text-emerald-800 mt-1">Қуанды</span>
+            </button>
+            <button onclick="checkEmotionAnswer('sad')" class="p-3 bg-white border-2 border-sky-300 rounded-2xl shadow hover:scale-105 transition flex flex-col items-center">
+              <span class="text-3xl">😢</span>
+              <span class="text-xs font-extrabold text-sky-800 mt-1">Ренжіді</span>
+            </button>
+            <button onclick="checkEmotionAnswer('angry')" class="p-3 bg-white border-2 border-rose-300 rounded-2xl shadow hover:scale-105 transition flex flex-col items-center">
+              <span class="text-3xl">😡</span>
+              <span class="text-xs font-extrabold text-rose-800 mt-1">Ашуланды</span>
+            </button>
+            <button onclick="checkEmotionAnswer('surprised')" class="p-3 bg-white border-2 border-amber-300 rounded-2xl shadow hover:scale-105 transition flex flex-col items-center">
+              <span class="text-3xl">😲</span>
+              <span class="text-xs font-extrabold text-amber-800 mt-1">Таңғалды</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2: Әдептілік -->
+        <div id="social-2-panel" class="social-panel hidden space-y-4 text-center">
+          <h3 class="text-xl sm:text-3xl font-black text-teal-900">«Әдептілік және Дұрыс таңдау»</h3>
+          <p class="font-extrabold text-sm text-teal-900">Жағдаят: Досың саған сыйлық берді. Не айтасың?</p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <button onclick="selectMagicWord('Сәлеметсіз бе', false)" class="px-5 py-3 bg-amber-400 text-slate-900 font-extrabold text-xs rounded-2xl shadow">«Сәлеметсіз бе»</button>
+            <button onclick="selectMagicWord('Рахмет', true)" class="px-5 py-3 bg-emerald-500 text-white font-extrabold text-xs rounded-2xl shadow">«Рахмет»</button>
+            <button onclick="selectMagicWord('Кешіріңіз', false)" class="px-5 py-3 bg-sky-400 text-white font-extrabold text-xs rounded-2xl shadow">«Кешіріңіз»</button>
+          </div>
+        </div>
+
+        <!-- 3: Топтық кеме -->
+        <div id="social-3-panel" class="social-panel hidden space-y-4 text-center">
+          <h3 class="text-xl sm:text-3xl font-black text-teal-900">«Топтық дос-кеме: Бірге саяхаттаймыз»</h3>
+          <div class="relative w-full max-w-md mx-auto h-48 bg-sky-100 rounded-3xl border-4 border-sky-300 flex items-center justify-center">
+            <span class="text-5xl">⛵</span>
+          </div>
+          <div class="flex justify-center gap-3">
+            <button onclick="showNotification('Керемет! Достар бірге кеме жасады! ⛵✨')" class="px-5 py-2.5 bg-sky-500 text-white font-extrabold text-xs rounded-2xl shadow">
+              Бірге ойнау
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Video Modal -->
+  <div id="video-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl p-4 sm:p-6 max-w-2xl w-full text-center space-y-4 shadow-2xl border-4 border-amber-400 animate-springBounce relative">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h3 id="modal-video-title" class="text-base sm:text-lg font-black text-amber-900 truncate">🎬 Бейнеролик</h3>
+        <button onclick="closeVideoModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 hover:bg-rose-100 flex items-center justify-center text-sm font-bold">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="relative bg-black rounded-2xl overflow-hidden shadow-lg border-2 border-amber-200 aspect-video">
+        <video id="modal-video-element" class="w-full h-full object-cover" controls playsinline>
+          <source id="modal-video-source" src="" type="video/mp4">
+          Браузер видеоны қолдамайды.
+        </video>
+      </div>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-xs text-slate-500 font-bold">Видеоны көріп біткен соң сыйлық ал!</span>
+        <button onclick="rewardModalVideo()" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-extrabold text-xs px-6 py-2.5 rounded-2xl shadow">
+          <i class="fa-solid fa-star"></i> Жұлдызша алу (+3 ⭐)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Modal -->
+  <div id="custom-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl border-4 border-amber-300 animate-springBounce">
+      <div class="text-4xl animate-bounce">⭐</div>
+      <p id="modal-text" class="text-sm font-extrabold text-slate-800 leading-relaxed"></p>
+      <button onclick="closeModal()" class="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-white font-extrabold py-2.5 rounded-2xl shadow">
+        Жақсы
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-16 text-center text-xs font-bold text-slate-500 px-4 pb-6">
+    <p>© ZEREK BALA - Барлық құқықтар қорғалған.</p>
+    <p class="mt-1.5 text-sm font-black text-purple-700">
+      Авторы: <span class="text-amber-600">Отарова Әсел Сатыбалдықызы</span>
+    </p>
+  </footer>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    function showNotification(msg) {
+      const modal = document.getElementById("custom-modal");
+      const text = document.getElementById("modal-text");
+      if (modal && text) {
+        text.textContent = msg;
+        modal.classList.remove("hidden");
+      }
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("custom-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function playGameAudio(primaryPath, fallbackPath) {
+      const audioObj = new Audio(primaryPath);
+      audioObj.play().catch(err => {
+        if (fallbackPath) {
+          const fallbackObj = new Audio(fallbackPath);
+          fallbackObj.play().catch(e => {});
+        }
+      });
+    }
+
+    function playSoftClick() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.11);
+      } catch (e) {}
+    }
+
+    function openVideoModal(videoSrc, title) {
+      playSoftClick();
+      const modal = document.getElementById("video-modal");
+      const videoElement = document.getElementById("modal-video-element");
+      const videoSource = document.getElementById("modal-video-source");
+      const titleElement = document.getElementById("modal-video-title");
+
+      if (modal && videoElement && videoSource) {
+        titleElement.textContent = "🎬 " + title;
+        videoSource.src = videoSrc;
+        videoElement.load();
+        modal.classList.remove("hidden");
+        videoElement.play().catch(e => {});
+      }
+    }
+
+    function closeVideoModal() {
+      const modal = document.getElementById("video-modal");
+      const videoElement = document.getElementById("modal-video-element");
+      if (modal && videoElement) {
+        videoElement.pause();
+        modal.classList.add("hidden");
+      }
+    }
+
+    function rewardModalVideo() {
+      playGameAudio("audio/correct.mp3", "audio/win.mp3");
+      const starEl = document.getElementById("star-count");
+      if (starEl) {
+        let stars = parseInt(starEl.textContent) || 0;
+        starEl.textContent = stars + 3;
+      }
+      showNotification("Жарайсың! Видеоны көргенің үшін +3 ⭐ Жұлдызша қосылды!");
+      closeVideoModal();
+    }
+
+    /* 1-Модуль табтары */
+    function switchGameTab(tabIndex) {
+      document.querySelectorAll(".game-panel").forEach(panel => panel.classList.add("hidden"));
+      const p = document.getElementById(`game-${tabIndex}-panel`);
+      if (p) p.classList.remove("hidden");
+
+      for (let i = 1; i <= 5; i++) {
+        const t = document.getElementById(`game-tab-${i}`);
+        if (!t) continue;
+        if (i === tabIndex) {
+          t.className = "py-3 px-3 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-black text-xs sm:text-sm text-center shadow-lg border-2 border-purple-300 transition-all flex items-center justify-center gap-2 hover:scale-102";
+        } else {
+          t.className = "py-3 px-3 rounded-2xl bg-slate-100 text-slate-700 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-200 transition-all flex items-center justify-center gap-2 hover:bg-slate-200";
+        }
+      }
+    }
+
+    function finishCommSkillsModule() {
+      playGameAudio("audio/win.mp3", "audio/correct.mp3");
+      let starEl = document.getElementById("star-count");
+      if (starEl) starEl.textContent = (parseInt(starEl.textContent) || 0) + 15;
+      document.querySelectorAll(".game-panel").forEach(p => p.classList.add("hidden"));
+      document.getElementById("game-complete").classList.remove("hidden");
+    }
+
+    /* 2-Модуль табтары */
+    function switchCogGameTab(tabIndex) {
+      document.querySelectorAll(".cog-panel").forEach(panel => panel.classList.add("hidden"));
+      const p = document.getElementById(`cog-${tabIndex}-panel`);
+
+      for (let i = 1; i <= 3; i++) {
+        const t = document.getElementById(`cog-tab-${i}`);
+        if (!t) continue;
+        if (i === tabIndex) {
+          t.className = "py-2.5 px-2 rounded-2xl bg-amber-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-md border-2 border-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        } else {
+          t.className = "py-2.5 px-2 rounded-2xl bg-slate-200 text-slate-600 font-extrabold text-xs sm:text-sm text-center border-2 border-slate-300 transition-all flex flex-col sm:flex-row items-center justify-center gap-1";
+        }
+      }
+
+      if (tabIndex === 1 && p) p.classList.remove("hidden");
+      if (tabIndex === 2 && p) {
+        p.classList.remove("hidden");
+        startMagicIslandGame();
+      }
+      if (tabIndex === 3 && p) {
+        p.classList.remove("hidden");
+        initBearBerryGame();
+      }
+    }
+
+    /* «Сиқырлы арал» логикасы */
+    const basketCapacities = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5 };
+    let basketCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    let activeSelectedApple = null;
+    let isAppleGameFinished = false;
+
+    function playAlmaTaskAudio() {
+      playGameAudio("audio/alma_tapsyrma.mp3", "audio/bear_intro1.mp3");
+    }
+
+    function playBasketFullAudio() {
+      playGameAudio("audio/sebet_toldy.mp3", "audio/wrong.mp3");
+    }
+
+    function startMagicIslandGame() {
+      const stage = document.getElementById("magic-island-stage");
+      const victoryBox = document.getElementById("apple-victory-box");
+      const applesContainer = document.getElementById("tree-apples-container");
+      if (!stage || !applesContainer) return;
+
+      isAppleGameFinished = false;
+      activeSelectedApple = null;
+      stage.classList.remove("clouds-dancing");
+      if (victoryBox) victoryBox.classList.add("hidden");
+
+      basketCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      for (let i = 1; i <= 5; i++) {
+        const countEl = document.getElementById(`bcount-${i}`);
+        const viewEl = document.getElementById(`basket-view-${i}`);
+        const basketEl = document.getElementById(`basket-item-${i}`);
+        if (countEl) countEl.textContent = "0";
+        if (viewEl) viewEl.innerHTML = "";
+        if (basketEl) basketEl.classList.remove("basket-full");
+      }
+
+      applesContainer.innerHTML = "";
+      const appleCoordinates = [
+        { top: 25, left: '46%' }, { top: 40, left: '32%' }, { top: 38, left: '60%' },
+        { top: 65, left: '22%' }, { top: 60, left: '44%' }, { top: 62, left: '70%' },
+        { top: 85, left: '16%' }, { top: 88, left: '34%' }, { top: 92, left: '55%' },
+        { top: 86, left: '78%' }, { top: 115, left: '26%' }, { top: 120, left: '45%' },
+        { top: 118, left: '68%' }, { top: 140, left: '36%' }, { top: 142, left: '58%' },
+        { top: 135, left: '20%' }, { top: 138, left: '80%' }
+      ];
+
+      appleCoordinates.forEach((pos, idx) => {
+        const apple = document.createElement("div");
+        apple.className = "css-apple";
+        apple.id = `magic-apple-${idx}`;
+        apple.style.top = `${pos.top}px`;
+        apple.style.left = pos.left;
+        apple.style.transform = "translateX(-50%)";
+        apple.onclick = function(e) {
+          e.stopPropagation();
+          selectApple(apple);
+        };
+        applesContainer.appendChild(apple);
+      });
+
+      const taskLabel = document.getElementById("magic-apple-task-text");
+      if (taskLabel) taskLabel.textContent = "🍎 Алманы басып, нөмірі сәйкес себетке салыңыз! (1, 2, 3, 4, 5)";
+      setTimeout(() => playAlmaTaskAudio(), 400);
+    }
+
+    function selectApple(appleEl) {
+      if (isAppleGameFinished || appleEl.getAttribute("data-collected") === "true") return;
+      playSoftClick();
+      document.querySelectorAll(".css-apple").forEach(a => a.classList.remove("selected-apple"));
+      if (activeSelectedApple === appleEl) {
+        activeSelectedApple = null;
+        return;
+      }
+      activeSelectedApple = appleEl;
+      appleEl.classList.add("selected-apple");
+    }
+
+    function handleBasketClick(basketNum) {
+      if (isAppleGameFinished) return;
+      const basketItem = document.getElementById(`basket-item-${basketNum}`);
+      if (!basketItem) return;
+
+      if (!activeSelectedApple) {
+        if (basketCounts[basketNum] >= basketCapacities[basketNum]) {
+          showBasketFullAlert(basketItem);
+          playBasketFullAudio();
+          return;
+        }
+        showNotification(`Алдымен ағаштан қызыл алманы таңдаңыз, содан кейін ${basketNum}-себетті басыңыз! 🍎`);
+        return;
+      }
+
+      if (basketCounts[basketNum] >= basketCapacities[basketNum]) {
+        showBasketFullAlert(basketItem);
+        playBasketFullAudio();
+        return;
+      }
+
+      const appleToMove = activeSelectedApple;
+      activeSelectedApple = null;
+      appleToMove.classList.remove("selected-apple");
+      appleToMove.setAttribute("data-collected", "true");
+      appleToMove.style.pointerEvents = "none";
+
+      playGameAudio("audio/alma_salu.mp3", null);
+      playSoftClick();
+
+      const stage = document.getElementById("magic-island-stage");
+      const stageRect = stage.getBoundingClientRect();
+      const appleRect = appleToMove.getBoundingClientRect();
+      const basketRect = basketItem.getBoundingClientRect();
+
+      const deltaX = (basketRect.left - stageRect.left + 26) - (appleRect.left - stageRect.left);
+      const deltaY = (basketRect.top - stageRect.top + 26) - (appleRect.top - stageRect.top);
+
+      appleToMove.style.position = "absolute";
+      appleToMove.style.transition = "transform 0.55s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.55s ease-in";
+      appleToMove.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.6) rotate(180deg)`;
+      appleToMove.style.zIndex = "100";
+
+      setTimeout(() => {
+        appleToMove.style.opacity = "0";
+        setTimeout(() => appleToMove.remove(), 80);
+
+        basketItem.classList.remove("basket-bounce");
+        void basketItem.offsetWidth;
+        basketItem.classList.add("basket-bounce");
+
+        basketCounts[basketNum]++;
+        const countEl = document.getElementById(`bcount-${basketNum}`);
+        const viewEl = document.getElementById(`basket-view-${basketNum}`);
+        if (countEl) countEl.textContent = basketCounts[basketNum];
+        if (viewEl) {
+          const miniDot = document.createElement("span");
+          miniDot.className = "basket-mini-apple";
+          viewEl.appendChild(miniDot);
+        }
+
+        if (basketCounts[basketNum] === basketCapacities[basketNum]) {
+          basketItem.classList.add("basket-full");
+        }
+
+        const isComplete = [1, 2, 3, 4, 5].every(num => basketCounts[num] === basketCapacities[num]);
+        if (isComplete) {
+          isAppleGameFinished = true;
+          triggerAppleVictory();
+        }
+      }, 550);
+    }
+
+    function showBasketFullAlert(basketItem) {
+      const oldBubble = basketItem.querySelector(".basket-alert-bubble");
+      if (oldBubble) oldBubble.remove();
+      const bubble = document.createElement("div");
+      bubble.className = "basket-alert-bubble";
+      bubble.textContent = "Бұл себетте алмалар толды!";
+      basketItem.appendChild(bubble);
+      setTimeout(() => { if (bubble) bubble.remove(); }, 1600);
+    }
+
+    function triggerAppleVictory() {
+      const stage = document.getElementById("magic-island-stage");
+      const victoryBox = document.getElementById("apple-victory-box");
+      playGameAudio("audio/alma_zhenis.mp3", "audio/win.mp3");
+      if (stage) stage.classList.add("clouds-dancing");
+
+      let starEl = document.getElementById("star-count");
+      if (starEl) starEl.textContent = (parseInt(starEl.textContent) || 0) + 15;
+      setTimeout(() => { if (victoryBox) victoryBox.classList.remove("hidden"); }, 1000);
+    }
+
+    /* «Аюға жидек береміз» логикасы */
+    let currentTargetDots = 3;
+    let eatenBerriesCount = 0;
+    let isFeedingLocked = false;
+    const kazakhNumberWords = ["", "Бір", "Екі", "Үш", "Төрт", "Бес"];
+    const praiseWords = ["Жарайсың!", "Бәрекелді!", "Керемет!", "Өте дұрыс!"];
+
+    function speakKazakhWord(text) {
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'kk-KZ';
+          utterance.rate = 0.9;
+          window.speechSynthesis.speak(utterance);
+        }
+      } catch (e) {}
+    }
+
+    function playBearTaskAudio() {
+      playGameAudio("audio/bear_intro1.mp3", "audio/correct.mp3");
+      setTimeout(() => {
+        speakKazakhWord(`Аюға дәл ${currentTargetDots} жидек берші!`);
+      }, 300);
+    }
+
+    function initBearBerryGame() {
+      const cloud = document.getElementById("bear-thought-cloud");
+      const bearChar = document.getElementById("bear-character");
+      const mouthOpen = document.getElementById("bear-mouth-open-shape");
+      const taskText = document.getElementById("bear-task-text");
+      if (!cloud || !bearChar) return;
+
+      isFeedingLocked = false;
+      eatenBerriesCount = 0;
+      bearChar.classList.remove("bear-happy-dance");
+      if (mouthOpen) mouthOpen.classList.add("hidden");
+
+      currentTargetDots = Math.floor(Math.random() * 5) + 1;
+      if (taskText) {
+        taskText.textContent = `🍓 Аюға дәл ${currentTargetDots} жидек беріп, оны қуант! (${currentTargetDots} нүкте)`;
+      }
+
+      cloud.innerHTML = "";
+      for (let i = 0; i < currentTargetDots; i++) {
+        const dot = document.createElement("div");
+        dot.className = "thought-dot";
+        dot.id = `thought-dot-${i}`;
+        cloud.appendChild(dot);
+      }
+
+      for (let i = 1; i <= 5; i++) {
+        const berry = document.getElementById(`berry-${i}`);
+        if (berry) {
+          berry.classList.remove("berry-hidden");
+          berry.style.transform = "";
+          berry.style.opacity = "1";
+        }
+      }
+    }
+
+    function feedBerry(berryIndex, event) {
+      if (isFeedingLocked) return;
+      const berryEl = document.getElementById(`berry-${berryIndex}`);
+      const stage = document.getElementById("forest-berry-stage");
+      const bearMouth = document.getElementById("bear-character");
+      const mouthOpenShape = document.getElementById("bear-mouth-open-shape");
+      if (!berryEl || !stage || !bearMouth) return;
+
+      playSoftClick();
+      isFeedingLocked = true;
+      eatenBerriesCount++;
+
+      speakKazakhWord(kazakhNumberWords[eatenBerriesCount] || "");
+      if (mouthOpenShape) mouthOpenShape.classList.remove("hidden");
+
+      const stageRect = stage.getBoundingClientRect();
+      const berryRect = berryEl.getBoundingClientRect();
+      const bearRect = bearMouth.getBoundingClientRect();
+
+      const targetX = (bearRect.left - stageRect.left) + bearRect.width / 2;
+      const targetY = (bearRect.top - stageRect.top) + (bearRect.height * 0.62);
+      const startX = berryRect.left - stageRect.left + berryRect.width / 2;
+      const startY = berryRect.top - stageRect.top + berryRect.height / 2;
+
+      berryEl.style.transition = "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease-in";
+      berryEl.style.transform = `translate(${targetX - startX}px, ${targetY - startY}px) scale(0.4) rotate(180deg)`;
+      berryEl.style.opacity = "0.2";
+
+      setTimeout(() => {
+        berryEl.classList.add("berry-hidden");
+        berryEl.style.transform = "";
+        berryEl.style.opacity = "1";
+        if (mouthOpenShape) mouthOpenShape.classList.add("hidden");
+
+        const targetDot = document.getElementById(`thought-dot-${eatenBerriesCount - 1}`);
+        if (targetDot) targetDot.classList.add("active-eaten");
+        playGameAudio("audio/correct.mp3", null);
+
+        if (eatenBerriesCount >= currentTargetDots) {
+          handleBearRoundVictory();
+        } else {
+          isFeedingLocked = false;
+        }
+      }, 450);
+    }
+
+    function handleBearRoundVictory() {
+      const bearChar = document.getElementById("bear-character");
+      if (bearChar) bearChar.classList.add("bear-happy-dance");
+      const randomPraise = praiseWords[Math.floor(Math.random() * praiseWords.length)];
+      setTimeout(() => speakKazakhWord(randomPraise), 250);
+
+      let starEl = document.getElementById("star-count");
+      if (starEl) starEl.textContent = (parseInt(starEl.textContent) || 0) + 1;
+
+      setTimeout(() => initBearBerryGame(), 2000);
+    }
+
+    function finishCogModuleDirect() {
+      playGameAudio("audio/win.mp3", "audio/correct.mp3");
+      let starEl = document.getElementById("star-count");
+      if (starEl) starEl.textContent = (parseInt(starEl.textContent) || 0) + 15;
+      document.querySelectorAll(".cog-panel").forEach(p => p.classList.add("hidden"));
+      document.getElementById("cog-complete-panel").classList.remove("hidden");
+    }
+
+    /* 3-Модуль мен 4-Модуль көмекші логикалары */
+    function switchCreativeGameTab(idx) {
+      document.querySelectorAll(".creative-panel").forEach(p => p.classList.add("hidden"));
+      const p = document.getElementById(`creative-${idx}-panel`);
+      if (p) p.classList.remove("hidden");
+    }
+
+    function switchSocialGameTab(idx) {
+      document.querySelectorAll(".social-panel").forEach(p => p.classList.add("hidden"));
+      const p = document.getElementById(`social-${idx}-panel`);
+      if (p) p.classList.remove("hidden");
+    }
+
+    function checkEmotionAnswer(emo) {
+      if (emo === 'happy') {
+        playGameAudio("audio/correct.mp3");
+        showNotification("ДҰРЫС! 🎂 Аю туған күнінде қуанды! 😊 (+5 ⭐)");
+        let starEl = document.getElementById("star-count");
+        if (starEl) starEl.textContent = (parseInt(starEl.textContent) || 0) + 5;
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Қайтадан ойланып көр! 😊");
+      }
+    }
+
+    function selectMagicWord(word, isCorrect) {
+      if (isCorrect) {
+        playGameAudio("audio/correct.mp3");
+        showNotification("ДҰРЫС! Сыйлық алғанда «РАХМЕТ» дейміз! 💖 (+5 ⭐)");
+        let starEl = document.getElementById("star-count");
+        if (starEl) starEl.textContent = (parseInt(starEl.textContent) || 0) + 5;
+      } else {
+        playGameAudio("audio/wrong.mp3");
+        showNotification("Басқа сиқырлы сөзді байқап көр! 😊");
+      }
+    }
+
+    let canvas, ctx;
+    let isPainting = false;
+    let currentPaintColor = '#ef4444';
+
+    function initCanvasLogic() {
+      canvas = document.getElementById("paint-canvas");
+      if (!canvas) return;
+      ctx = canvas.getContext("2d");
+      canvas.onmousedown = (e) => { isPainting = true; drawPainting(e); };
+      canvas.onmousemove = drawPainting;
+      canvas.onmouseup = () => { isPainting = false; ctx.beginPath(); };
+    }
+
+    function setPaintColor(c) { currentPaintColor = c; }
+    function clearPaintCanvas() { if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function setPaintTemplate(t) {
+      clearPaintCanvas();
+      if (!ctx || !canvas) return;
+      ctx.font = "bold 16px Montserrat";
+      ctx.fillStyle = "#94a3b8";
+      ctx.fillText(t === 'school' ? "🏫 Мектеп" : (t === 'space' ? "🚀 Ғарышкер" : "🩺 Дәрігер"), 40, 50);
+    }
+
+    function drawPainting(e) {
+      if (!isPainting || !ctx) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || e.pageX) - rect.left;
+      const y = (e.clientY || e.pageY) - rect.top;
+      ctx.fillStyle = currentPaintColor;
+      ctx.beginPath();
+      ctx.arc(x, y, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    let selectedFam = null;
+    function selectFamilyMember(key) { selectedFam = key; showNotification(`${key === 'grandpa' ? 'Ата' : 'Әже'} таңдалды! 🌳`); }
+    function placeFamilyMember(slot) {
+      if (!selectedFam) return;
+      if (selectedFam === slot) {
+        playGameAudio("audio/correct.mp3");
+        document.getElementById(`slot-${slot}-content`).textContent = slot === 'grandpa' ? '👴 Ата' : '👵 Әже';
+        document.getElementById(`fam-btn-${slot}`).classList.add("opacity-30");
+        selectedFam = null;
+      }
+    }
+
+    function moveCharToSpace(charKey, pos) {
+      const fox = document.getElementById("char-fox");
+      const bear = document.getElementById("char-bear");
+      if (charKey === 'fox' && pos === 'behind_tree') fox.style.left = '75%';
+      if (charKey === 'bear' && pos === 'in_front_house') bear.style.left = '12%';
+      playSoftClick();
+    }
+
+    /* Әуен ойнатқыш баптаулары */
+    const tracks = [
+      { title: "🎶 Мен ауылға барамын", src: "audio/music1.mp3" },
+      { title: "🎶 Адай күйі", src: "audio/music2.mp3" },
+      { title: "🎶 Жаңбыр әні", src: "audio/music3.mp3" }
+    ];
+    let currentTrackIndex = 0;
+    let audio, playPauseBtn, playIcon, seekBar, volumeBar, currentTimeEl, durationTimeEl, equalizerBars, trackTitle;
+
+    function loadTrack(idx) {
+      if (!audio) return;
+      currentTrackIndex = idx;
+      audio.src = tracks[idx].src;
+      trackTitle.textContent = tracks[idx].title;
+    }
+
+    function togglePlay() {
+      if (!audio) return;
+      if (audio.paused) {
+        audio.play().then(() => {
+          playIcon.className = "fa-solid fa-pause";
+          equalizerBars.classList.remove("opacity-40");
+        }).catch(e => {});
+      } else {
+        audio.pause();
+        playIcon.className = "fa-solid fa-play ml-0.5";
+        equalizerBars.classList.add("opacity-40");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      audio = document.getElementById("main-audio-player");
+      playPauseBtn = document.getElementById("play-pause-btn");
+      playIcon = document.getElementById("play-icon");
+      seekBar = document.getElementById("seek-bar");
+      volumeBar = document.getElementById("volume-bar");
+      currentTimeEl = document.getElementById("current-time");
+      durationTimeEl = document.getElementById("duration-time");
+      equalizerBars = document.getElementById("equalizer-bars");
+      trackTitle = document.getElementById("player-track-title");
+
+      if (playPauseBtn) playPauseBtn.addEventListener("click", togglePlay);
+      document.getElementById("prev-btn")?.addEventListener("click", () => {
+        currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+        loadTrack(currentTrackIndex);
+        togglePlay();
+      });
+      document.getElementById("next-btn")?.addEventListener("click", () => {
+        currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+        loadTrack(currentTrackIndex);
+        togglePlay();
+      });
+
+      // Mini Playlist Card Click Events (Қалпына келтірілді)
+      document.querySelectorAll(".music-card").forEach((card, index) => {
+        card.addEventListener("click", () => {
+          loadTrack(index);
+          togglePlay();
+        });
+      });
+
+      document.getElementById("video-reward-btn")?.addEventListener("click", () => {
+        let starEl = document.getElementById("star-count");
+        if (starEl) starEl.textContent = (parseInt(starEl.textContent) || 0) + 5;
+        showNotification("Жарайсың! +5 Жұлдызша ұтып алдың! ⭐");
+      });
+
+      initCanvasLogic();
+      loadTrack(0);
+      switchCogGameTab(1);
+    });
+  </script>
+</body>
+</html>
